@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: knote
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: knote
+    spec:
+      containers:
+      - name: app
+        image: learnk8s/knote:2.0.0
+        ports:
+          - containerPort: 3000
+        env:
+        - name: MONGO_URL
+          value: mongodb://mongodb:27017
+        - name: MINIO_ACCESS_KEY
+          value: examplekey
+        - name: MINIO_SECRET_KEY
+          value: examplesecret
