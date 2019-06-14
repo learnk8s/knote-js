@@ -33,14 +33,14 @@ spec:
             - /storage
           env:
             - name: MINIO_ACCESS_KEY
-              value: "examplekey"
+              value: mykey
             - name: MINIO_SECRET_KEY
-              value: "secretkey"
+              value: mysecret
           ports:
             - containerPort: 9000
           volumeMounts:
             - name: storage
-              mountPath: "/storage"
+              mountPath: /storage
       volumes:
         - name: storage
           persistentVolumeClaim:

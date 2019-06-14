@@ -7,8 +7,6 @@ const MinIO = require('minio')
 
 const port = process.env.PORT || 3000
 const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017'
-const minioAccessKey = process.env.MINIO_ACCESS_KEY
-const minioSecretKey = process.env.MINIO_SECRET_KEY
 const minioHost = process.env.MINIO_HOST || "localhost"
 
 const app = express()
@@ -21,16 +19,15 @@ const minioClient = new MinIO.Client({
   endPoint: minioHost,
   port: 9000,
   useSSL: false,
-  accessKey: minioAccessKey,
-  secretKey: minioSecretKey,
+  accessKey: process.env.MINIO_ACCESS_KEY,
+  secretKey: process.env.MINIO_SECRET_KEY,
 })
 
 const minioBucket = 'image-storage'
 minioClient
   .bucketExists(minioBucket)
   .then(async bucketExists => {
-    if (bucketExists) return
-    await minioClient.makeBucket(minioBucket)
+    if (!bucketExists) await minioClient.makeBucket(minioBucket)
   })
   .catch(error => console.log(error))
 
@@ -45,9 +42,9 @@ app.get('/', async (req, res) => {
 app.post('/note', multer({ storage: multer.memoryStorage() }).single('image'), async (req, res) => {
   if (req.body.upload) {
     await minioClient.putObject(minioBucket, req.file.originalname, req.file.buffer)
-    const publicUrl = `/img/${encodeURIComponent(req.file.originalname)}`
+    const link = `/img/${encodeURIComponent(req.file.originalname)}`
     return res.render('index', {
-      content: `${req.body.description} ![](${publicUrl})`,
+      content: `${req.body.description} ![](${link})`,
       notes: await getNotesAsMd(db),
     })
   }
