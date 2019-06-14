@@ -1,51 +1,27 @@
-const express = require('express')
-const bodyParser = require('body-parser')
 const path = require('path')
+const express = require('express')
+const app = express()
 const mongo = require('mongodb').MongoClient
+const multer = require('multer')
+const marked = require('marked')
+const MinIO = require('minio')
 
 const port = process.env.PORT || 3000
-const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017'
-const minioAccessKey = process.env.MINIO_ACCESS_KEY || ''
-const minioSecretKey = process.env.MINIO_SECRET_KEY || ''
+const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017'
+const minioAccessKey = process.env.MINIO_ACCESS_KEY || "examplekey"
+const minioSecretKey = process.env.MINIO_SECRET_KEY || "examplesecret"
+const minioHost = process.env.MINIO_HOST || "localhost"
 
-const app = express()
-const db = mongo.connect(mongoUrl, { useNewUrlParser: true }).then(it => it.db('dev').collection('notes'))
-const minioClient = new Minio.Client({
-  endPoint: 'localhost',
+const upload = multer({ dest: path.join(__dirname, 'public/uploads/') })
+
+const minioClient = new MinIO.Client({
+  endPoint: minioHost,
   port: 9000,
   useSSL: false,
   accessKey: minioAccessKey,
   secretKey: minioSecretKey,
 })
 const minioBucket = 'image-storage'
-
-app.use(bodyParser.urlencoded({ extended: true }))
-app.set('view engine', 'pug')
-app.set('views', path.join(__dirname, '/views'))
-
-app.use(express.static(path.join(__dirname, 'public')))
-
-app.get('/', async (req, res) => {
-  res.render('index', { notes: await getNotesAsMd(null) })
-})
-
-app.post('/note', multer({ storage: multer.memoryStorage() }).single('image'), async (req, res) => {
-  if (req.body.upload) {
-    await minioClient.putObject(minioBucket, req.file.originalname, req.file.buffer)
-    const publicUrl = `${minioClient.protocol}//${minioClient.host}:${
-      minioClient.port
-    }/${minioBucket}/${encodeURIComponent(req.file.originalname)}`
-    return res.render('index', {
-      content: `${req.body.description} ![](${publicUrl})`,
-      notes: await getNotesAsMd(db),
-    })
-  }
-  const description = req.body.description
-  if (!!description) {
-    await insertNote(db, { description })
-  }
-  res.redirect('/')
-})
 
 minioClient
   .bucketExists(minioBucket)
@@ -74,17 +50,48 @@ minioClient
   })
   .catch(error => console.log(error))
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}!\n\nOpen a browser window and visit http://localhost:${port}/first`)
+
+const db = mongo
+  .connect(mongoURL, { useNewUrlParser: true })
+  .then(it => it.db('dev').collection('notes'))
+
+app.set('view engine', 'pug')
+app.set('views', path.join(__dirname, '/views'))
+app.use(express.static(path.join(__dirname, 'public')))
+
+app.get('/', async (req, res) => {
+  res.render('index', { notes: await getNotesAsMd(db) })
 })
 
-async function getNotesAsMd(db) {
-  const client = await db
-  const notes = await client.find().toArray()
-  return notes
-}
+app.post('/note', multer({ storage: multer.memoryStorage() }).single('image'), async (req, res) => {
+  if (req.body.upload) {
+    await minioClient.putObject(minioBucket, req.file.originalname, req.file.buffer)
+    const publicUrl = `${minioClient.protocol}//${minioClient.host}:${minioClient.port}/${minioBucket}/${encodeURIComponent(req.file.originalname)}`
+    return res.render('index', {
+      content: `${req.body.description} ![](${publicUrl})`,
+      notes: await getNotesAsMd(db),
+    })
+  }
+  const description = req.body.description
+  if (!!description) {
+    await insertNote(db, { description })
+  }
+  res.redirect('/')
+})
+
+app.listen(port, () => {
+  console.log(`App listening on http://localhost:${port}`)
+})
 
 async function insertNote(db, note) {
   const client = await db
   await client.insertOne(note)
+}
+
+async function getNotesAsMd(db) {
+  const client = await db
+  const notes = await client.find().toArray()
+  return notes.map(it => {
+    return { ...it, description: marked(it.description) }
+  })
 }

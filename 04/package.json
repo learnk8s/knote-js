@@ -1,23 +1,19 @@
 {
-  "name": "knote",
+  "name": "knote2",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "express": "^4.16.4",
+    "express": "^4.17.1",
     "marked": "^0.6.2",
-    "minio": "^7.0.7",
-    "mongodb": "^3.2.3",
+    "minio": "^7.0.10",
+    "mongodb": "^3.2.7",
     "multer": "^1.4.1",
     "pug": "^2.0.3"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "start:stateful": "node 01/index.js",
-    "start:stateless": "node 02/index.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  }
 }
