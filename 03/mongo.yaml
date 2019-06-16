@@ -36,8 +36,7 @@ spec:
   - metadata:
       name: storage
     spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "standard"
+      accessModes: [ ReadWriteOnce ]
       resources:
         requests:
           storage: 256Mi

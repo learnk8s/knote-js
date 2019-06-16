@@ -20,7 +20,6 @@ spec:
   resources:
     requests:
       storage: 256Mi
-  storageClassName: standard
 ---
 apiVersion: apps/v1
 kind: Deployment
