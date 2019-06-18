@@ -5,8 +5,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 80
-    targetPort: 3000
+    - port: 80
+      targetPort: 3000
   selector:
     app: knote
 ---
@@ -25,16 +25,16 @@ spec:
         app: knote
     spec:
       containers:
-        - name: app
+        - name: knote
           image: learnk8s/knote:2.0.0
           ports:
             - containerPort: 3000
           env:
+            - name: MONGO_URL
+              value: mongodb://mongo:27017
             - name: MINIO_ACCESS_KEY
               value: mykey
             - name: MINIO_SECRET_KEY
               value: mysecret
             - name: MINIO_HOST
               value: minio
-            - name: MONGO_URL
-              value: mongodb://mongo:27017

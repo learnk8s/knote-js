@@ -26,8 +26,6 @@ kind: Deployment
 metadata:
   name: minio
 spec:
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       app: minio
