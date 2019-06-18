@@ -3,12 +3,12 @@ kind: Service
 metadata:
   name: knote
 spec:
-  type: LoadBalancer
+  selector:
+    app: knote
   ports:
     - port: 80
       targetPort: 3000
-  selector:
-    app: knote
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
