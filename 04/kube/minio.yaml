@@ -3,7 +3,6 @@ kind: Service
 metadata:
   name: minio
 spec:
-  type: LoadBalancer
   ports:
     - port: 9000
       targetPort: 9000
