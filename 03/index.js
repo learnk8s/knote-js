@@ -1,35 +1,18 @@
 const path = require('path')
 const express = require('express')
+const app = express()
 const mongo = require('mongodb').MongoClient
 const multer = require('multer')
 const marked = require('marked')
-const MinIO = require('minio')
 
 const port = process.env.PORT || 3000
 const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017'
-const minioHost = process.env.MINIO_HOST || "localhost"
 
-const app = express()
+const upload = multer({ dest: path.join(__dirname, 'public/uploads/') })
 
 const db = mongo
   .connect(mongoURL, { useNewUrlParser: true })
   .then(it => it.db('dev').collection('notes'))
-
-const minioClient = new MinIO.Client({
-  endPoint: minioHost,
-  port: 9000,
-  useSSL: false,
-  accessKey: process.env.MINIO_ACCESS_KEY,
-  secretKey: process.env.MINIO_SECRET_KEY,
-})
-
-const minioBucket = 'image-storage'
-minioClient
-  .bucketExists(minioBucket)
-  .then(async bucketExists => {
-    if (!bucketExists) await minioClient.makeBucket(minioBucket)
-  })
-  .catch(error => console.log(error))
 
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, '/views'))
@@ -39,12 +22,10 @@ app.get('/', async (req, res) => {
   res.render('index', { notes: await getNotesAsMd(db) })
 })
 
-app.post('/note', multer({ storage: multer.memoryStorage() }).single('image'), async (req, res) => {
+app.post('/note', upload.single('image'), async (req, res) => {
   if (req.body.upload) {
-    await minioClient.putObject(minioBucket, req.file.originalname, req.file.buffer)
-    const link = `/img/${encodeURIComponent(req.file.originalname)}`
     return res.render('index', {
-      content: `${req.body.description} ![](${link})`,
+      content: `${req.body.description} ![](/uploads/${encodeURIComponent(req.file.filename)})`,
       notes: await getNotesAsMd(db),
     })
   }
@@ -53,11 +34,6 @@ app.post('/note', multer({ storage: multer.memoryStorage() }).single('image'), a
     await insertNote(db, { description })
   }
   res.redirect('/')
-})
-
-app.get('/img/:name', async (req, res) => {
-  const stream = await minioClient.getObject(minioBucket, decodeURIComponent(req.params.name))
-  stream.pipe(res)
 })
 
 app.listen(port, () => {
