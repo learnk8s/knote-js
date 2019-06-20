@@ -1,68 +1,94 @@
 const path = require('path')
 const express = require('express')
-const mongo = require('mongodb').MongoClient
+const MongoClient = require('mongodb').MongoClient
 const multer = require('multer')
 const marked = require('marked')
-const MinIO = require('minio')
-
-const port = process.env.PORT || 3000
-const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017'
-const minioHost = process.env.MINIO_HOST || "localhost"
+const minio = require('minio')
 
 const app = express()
-
-const db = mongo
-  .connect(mongoURL, { useNewUrlParser: true })
-  .then(it => it.db('dev').collection('notes'))
-
-const minioClient = new MinIO.Client({
-  endPoint: minioHost,
-  port: 9000,
-  useSSL: false,
-  accessKey: process.env.MINIO_ACCESS_KEY,
-  secretKey: process.env.MINIO_SECRET_KEY,
-})
-
+const port = process.env.PORT || 3000
+const upload = multer({ storage: multer.memoryStorage() })
+const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017'
+const minioHost = process.env.MINIO_HOST || "localhost"
 const minioBucket = 'image-storage'
-minioClient
-  .bucketExists(minioBucket)
-  .then(async bucketExists => {
-    if (!bucketExists) await minioClient.makeBucket(minioBucket)
+
+async function initMongo() {
+  console.log("Initialising MongoDB...")
+  let success = false
+  while (!success) {
+    try {
+      client = await MongoClient.connect(mongoURL, { useNewUrlParser: true });
+      success = true
+    } catch {
+      await new Promise(resolve => setTimeout(resolve, 1000))
+    }
+  }
+  const db = client.db('dev').collection('notes')
+  console.log("MongoDB initialised")
+  return db
+}
+
+async function initMinIO() {
+  console.log("Initialising MinIO...")
+  const client = new minio.Client({
+    endPoint: minioHost,
+    port: 9000,
+    useSSL: false,
+    accessKey: process.env.MINIO_ACCESS_KEY,
+    secretKey: process.env.MINIO_SECRET_KEY,
   })
-  .catch(error => console.log(error))
-
-app.set('view engine', 'pug')
-app.set('views', path.join(__dirname, '/views'))
-app.use(express.static(path.join(__dirname, 'public')))
-
-app.get('/', async (req, res) => {
-  res.render('index', { notes: await getNotesAsMd(db) })
-})
-
-app.post('/note', multer({ storage: multer.memoryStorage() }).single('image'), async (req, res) => {
-  if (req.body.upload) {
-    await minioClient.putObject(minioBucket, req.file.originalname, req.file.buffer)
-    const link = `/img/${encodeURIComponent(req.file.originalname)}`
-    return res.render('index', {
-      content: `${req.body.description} ![](${link})`,
-      notes: await getNotesAsMd(db),
-    })
+  let success = false
+  while (!success) {
+    try {
+      if (!await client.bucketExists(minioBucket)) {
+        await client.makeBucket(minioBucket)
+      }
+      success = true
+    } catch {
+      await new Promise(resolve => setTimeout(resolve, 1000))
+    }
   }
-  const description = req.body.description
-  if (!!description) {
-    await insertNote(db, { description })
-  }
-  res.redirect('/')
-})
+  console.log("MinIO initialised")
+  return client
+}
 
-app.get('/img/:name', async (req, res) => {
-  const stream = await minioClient.getObject(minioBucket, decodeURIComponent(req.params.name))
-  stream.pipe(res)
-})
+async function start() {
+  const db = await initMongo() 
+  const minio = await initMinIO()
 
-app.listen(port, () => {
-  console.log(`App listening on http://localhost:${port}`)
-})
+  app.set('view engine', 'pug')
+  app.set('views', path.join(__dirname, '/views'))
+  app.use(express.static(path.join(__dirname, 'public')))
+
+  app.get('/', async (req, res) => {
+    res.render('index', { notes: await getNotesAsMd(db) })
+  })
+
+  app.post('/note', upload.single('image'), async (req, res) => {
+    if (req.body.upload) {
+      await minio.putObject(minioBucket, req.file.originalname, req.file.buffer)
+      const link = `/img/${encodeURIComponent(req.file.originalname)}`
+      return res.render('index', {
+        content: `${req.body.description} ![](${link})`,
+        notes: await getNotesAsMd(db),
+      })
+    }
+    const description = req.body.description
+    if (!!description) {
+      await insertNote(db, { description })
+    }
+    res.redirect('/')
+  })
+
+  app.get('/img/:name', async (req, res) => {
+    const stream = await minio.getObject(minioBucket, decodeURIComponent(req.params.name))
+    stream.pipe(res)
+  })
+
+  app.listen(port, () => {
+    console.log(`App listening on http://localhost:${port}`)
+  })
+}
 
 async function insertNote(db, note) {
   const client = await db
@@ -76,3 +102,5 @@ async function getNotesAsMd(db) {
     return { ...it, description: marked(it.description) }
   })
 }
+
+start()
