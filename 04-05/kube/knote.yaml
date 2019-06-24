@@ -38,3 +38,4 @@ spec:
               value: mysecret
             - name: MINIO_HOST
               value: minio
+          imagePullPolicy: Always
