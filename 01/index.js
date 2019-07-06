@@ -9,22 +9,22 @@ const port = process.env.PORT || 3000
 const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017'
 
 async function initMongo() {
-  console.log("Initialising MongoDB...")
+  console.log('Initialising MongoDB...')
   let success = false
   while (!success) {
     try {
-      client = await MongoClient.connect(mongoURL, { useNewUrlParser: true });
+      client = await MongoClient.connect(mongoURL, { useNewUrlParser: true })
       success = true
     } catch {
       await new Promise(resolve => setTimeout(resolve, 1000))
     }
   }
-  console.log("MongoDB initialised")
+  console.log('MongoDB initialised')
   return client.db('dev').collection('notes')
 }
 
 async function start() {
-  const db = await initMongo() 
+  const db = await initMongo()
 
   app.set('view engine', 'pug')
   app.set('views', path.join(__dirname, 'views'))
@@ -34,19 +34,22 @@ async function start() {
     res.render('index', { notes: await retrieveNotes(db) })
   })
 
-  app.post('/note', multer({ dest: path.join(__dirname, 'public/uploads/') }).single('image'), async (req, res) => {
-    if (!req.body.upload && req.body.description) {
-      await saveNote(db, { description: req.body.description })
-      res.redirect('/')
-    }
-    else if (req.body.upload && req.file) {
-      const link = `/uploads/${encodeURIComponent(req.file.filename)}`
-      res.render('index', {
-        content: `${req.body.description} ![](${link})`,
-        notes: await retrieveNotes(db),
-      })
-    }
-  })
+  app.post(
+    '/note',
+    multer({ dest: path.join(__dirname, 'public/uploads/') }).single('image'),
+    async (req, res) => {
+      if (!req.body.upload && req.body.description) {
+        await saveNote(db, { description: req.body.description })
+        res.redirect('/')
+      } else if (req.body.upload && req.file) {
+        const link = `/uploads/${encodeURIComponent(req.file.filename)}`
+        res.render('index', {
+          content: `${req.body.description} ![](${link})`,
+          notes: await retrieveNotes(db),
+        })
+      }
+    },
+  )
 
   app.listen(port, () => {
     console.log(`App listening on http://localhost:${port}`)

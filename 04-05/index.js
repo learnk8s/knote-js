@@ -8,37 +8,37 @@ const minio = require('minio')
 const app = express()
 const port = process.env.PORT || 3000
 const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017'
-const minioHost = process.env.MINIO_HOST || "localhost"
+const minioHost = process.env.MINIO_HOST || 'localhost'
 const minioBucket = 'image-storage'
 
 async function initMongo() {
-  console.log("Initialising MongoDB...")
+  console.log('Initialising MongoDB...')
   let success = false
   while (!success) {
     try {
-      client = await MongoClient.connect(mongoURL, { useNewUrlParser: true });
+      client = await MongoClient.connect(mongoURL, { useNewUrlParser: true })
       success = true
     } catch {
       await new Promise(resolve => setTimeout(resolve, 1000))
     }
   }
-  console.log("MongoDB initialised")
+  console.log('MongoDB initialised')
   return client.db('dev').collection('notes')
 }
 
 async function initMinIO() {
-  console.log("Initialising MinIO...")
+  console.log('Initialising MinIO...')
   const client = new minio.Client({
     endPoint: minioHost,
     port: 9000,
     useSSL: false,
     accessKey: process.env.MINIO_ACCESS_KEY,
-    secretKey: process.env.MINIO_SECRET_KEY
+    secretKey: process.env.MINIO_SECRET_KEY,
   })
   let success = false
   while (!success) {
     try {
-      if (! await client.bucketExists(minioBucket)) {
+      if (!(await client.bucketExists(minioBucket))) {
         await client.makeBucket(minioBucket)
       }
       success = true
@@ -46,12 +46,12 @@ async function initMinIO() {
       await new Promise(resolve => setTimeout(resolve, 1000))
     }
   }
-  console.log("MinIO initialised")
+  console.log('MinIO initialised')
   return client
 }
 
 async function start() {
-  const db = await initMongo() 
+  const db = await initMongo()
   const minio = await initMinIO()
 
   app.set('view engine', 'pug')
@@ -62,23 +62,33 @@ async function start() {
     res.render('index', { notes: await retrieveNotes(db) })
   })
 
-  app.post('/note',multer({ storage: multer.memoryStorage() }).single('image'), async (req, res) => {
-   if (!req.body.upload && req.body.description)  {
-      await saveNote(db, { description: req.body.description })
-      res.redirect('/')
-    }
-    else if (req.body.upload && req.file) {
-      await minio.putObject(minioBucket, req.file.originalname, req.file.buffer)
-      const link = `/img/${encodeURIComponent(req.file.originalname)}`
-      res.render('index', {
-        content: `${req.body.description} ![](${link})`,
-        notes: await retrieveNotes(db),
-      })
-    }
-  })
+  app.post(
+    '/note',
+    multer({ storage: multer.memoryStorage() }).single('image'),
+    async (req, res) => {
+      if (!req.body.upload && req.body.description) {
+        await saveNote(db, { description: req.body.description })
+        res.redirect('/')
+      } else if (req.body.upload && req.file) {
+        await minio.putObject(
+          minioBucket,
+          req.file.originalname,
+          req.file.buffer,
+        )
+        const link = `/img/${encodeURIComponent(req.file.originalname)}`
+        res.render('index', {
+          content: `${req.body.description} ![](${link})`,
+          notes: await retrieveNotes(db),
+        })
+      }
+    },
+  )
 
   app.get('/img/:name', async (req, res) => {
-    const stream = await minio.getObject(minioBucket, decodeURIComponent(req.params.name))
+    const stream = await minio.getObject(
+      minioBucket,
+      decodeURIComponent(req.params.name),
+    )
     stream.pipe(res)
   })
 
