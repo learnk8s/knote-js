@@ -73,7 +73,7 @@ async function start() {
         await minio.putObject(
           minioBucket,
           req.file.originalname,
-          req.file.buffer,
+          req.file.buffer
         )
         const link = `/img/${encodeURIComponent(req.file.originalname)}`
         res.render('index', {
@@ -81,7 +81,7 @@ async function start() {
           notes: await retrieveNotes(db),
         })
       }
-    },
+    }
   )
 
   app.get('/img/:name', async (req, res) => {

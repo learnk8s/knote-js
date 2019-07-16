@@ -48,7 +48,7 @@ async function start() {
           notes: await retrieveNotes(db),
         })
       }
-    },
+    }
   )
 
   app.listen(port, () => {
