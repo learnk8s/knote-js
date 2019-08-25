@@ -16,6 +16,7 @@ async function initMongo() {
       client = await MongoClient.connect(mongoURL, { useNewUrlParser: true })
       success = true
     } catch {
+      console.log('Error connecting to MongoDB, retrying in 1 second')
       await new Promise(resolve => setTimeout(resolve, 1000))
     }
   }
