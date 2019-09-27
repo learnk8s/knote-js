@@ -6,7 +6,7 @@ const marked = require('marked')
 
 const app = express()
 const port = process.env.PORT || 3000
-const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017'
+const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017/dev'
 
 async function initMongo() {
   console.log('Initialising MongoDB...')
@@ -21,7 +21,7 @@ async function initMongo() {
     }
   }
   console.log('MongoDB initialised')
-  return client.db('dev').collection('notes')
+  return client.db(client.s.options.dbName).collection('notes')
 }
 
 async function start() {
@@ -49,7 +49,7 @@ async function start() {
           notes: await retrieveNotes(db),
         })
       }
-    }
+    },
   )
 
   app.listen(port, () => {

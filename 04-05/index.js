@@ -7,7 +7,7 @@ const minio = require('minio')
 
 const app = express()
 const port = process.env.PORT || 3000
-const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017'
+const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017/dev'
 const minioHost = process.env.MINIO_HOST || 'localhost'
 const minioBucket = 'image-storage'
 
@@ -24,7 +24,7 @@ async function initMongo() {
     }
   }
   console.log('MongoDB initialised')
-  return client.db('dev').collection('notes')
+  return client.db(client.s.options.dbName).collection('notes')
 }
 
 async function initMinIO() {
