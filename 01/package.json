@@ -4,14 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "mongodb": "mongod"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "marked": "^0.6.2",
+    "marked": "^0.7.0",
     "mongodb": "^3.2.7",
+    "mongodb-prebuilt": "^6.5.0",
     "multer": "^1.4.1",
     "pug": "^2.0.3"
   }
