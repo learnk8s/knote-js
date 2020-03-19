@@ -16,7 +16,10 @@ async function initMongo() {
   let success = false
   while (!success) {
     try {
-      client = await MongoClient.connect(mongoURL, { useNewUrlParser: true })
+      client = await MongoClient.connect(mongoURL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      })
       success = true
     } catch {
       console.log('Error connecting to MongoDB, retrying in 1 second')
@@ -74,7 +77,7 @@ async function start() {
         await minio.putObject(
           minioBucket,
           req.file.originalname,
-          req.file.buffer
+          req.file.buffer,
         )
         const link = `/img/${encodeURIComponent(req.file.originalname)}`
         res.render('index', {
@@ -82,7 +85,7 @@ async function start() {
           notes: await retrieveNotes(db),
         })
       }
-    }
+    },
   )
 
   app.get('/img/:name', async (req, res) => {

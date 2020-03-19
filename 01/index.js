@@ -13,7 +13,10 @@ async function initMongo() {
   let success = false
   while (!success) {
     try {
-      client = await MongoClient.connect(mongoURL, { useNewUrlParser: true })
+      client = await MongoClient.connect(mongoURL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      })
       success = true
     } catch {
       console.log('Error connecting to MongoDB, retrying in 1 second')
