@@ -4,12 +4,12 @@ EKS is a managed Kubernetes service, which means that Amazon Web Services (AWS) 
 
 In particular, AWS:
 
-* Manages Kubernetes API servers and the etcd database.
-* Runs the Kubernetes control plane across three availability zones.
-* Scales the control-plane as you add more nodes to your cluster.
-* Provides a mechanism to upgrade your control plane to a newer version.
-* Rotates certificates.
-* [And more](https://aws.amazon.com/eks/?whats-new-cards.sort-by=item.additionalFields.postDateTime&whats-new-cards.sort-order=desc&eks-blogs.sort-by=item.additionalFields.createdDate&eks-blogs.sort-order=desc).
+- Manages Kubernetes API servers and the etcd database.
+- Runs the Kubernetes control plane across three availability zones.
+- Scales the control-plane as you add more nodes to your cluster.
+- Provides a mechanism to upgrade your control plane to a newer version.
+- Rotates certificates.
+- [And more](https://aws.amazon.com/eks/?whats-new-cards.sort-by=item.additionalFields.postDateTime&whats-new-cards.sort-order=desc&eks-blogs.sort-by=item.additionalFields.createdDate&eks-blogs.sort-order=desc).
 
 Less timing managing the cluster means that you have more time to focus on developing and deploying applications.
 
@@ -24,10 +24,10 @@ Here's everything you'll look at today.
 ## Table of contents
 
 1. [Logging into Amazon Web Services](#logging-into-amazon-web-services)
-2. [Creating a Kubernetes cluster on AWS](#creating-a-kubernetes-cluster-on-aws)
-3. [Deploying the app](#deploying-the-app)
-4. [Taking into account resource limits](#taking-into-account-resource-limits)
-5. [Cleaning up](#cleaning-up)
+1. [Creating a Kubernetes cluster on AWS](#creating-a-kubernetes-cluster-on-aws)
+1. [Deploying the app](#deploying-the-app)
+1. [Taking into account resource limits](#taking-into-account-resource-limits)
+1. [Cleaning up](#cleaning-up)
 
 ## Logging into Amazon Web Services
 

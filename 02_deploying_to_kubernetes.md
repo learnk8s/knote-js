@@ -4,15 +4,15 @@ If you use Docker containers and wish to deploy your app into production, you mi
 
 You could:
 
-* Run the container in the server manually with a docker run.
-* Use a tool such as docker-compose to run and manage several containers at the same time.
-* Or you could use a container orchestrator — a tool designed to manage and run containers at scale.
+- Run the container in the server manually with a docker run.
+- Use a tool such as docker-compose to run and manage several containers at the same time.
+- Or you could use a container orchestrator — a tool designed to manage and run containers at scale.
 
 In this chapter, you will learn how to use Kubernetes (the most popular container orchestrator) to deploy your Node.js apps as Docker containers.
 
 To demonstrate, we're going to deploy an app called Knote on a Kubernetes cluster.
 
-The application comes already prepackaged as a Docker container. If you wish to learn how to build your own, you might want to check out this other article that goes into [how to design a Node.js application that can be containeraised]. (https://learnk8s.io/spring-boot-kubernetes-guide)
+The application comes already prepackaged as a Docker container. If you wish to learn how to build your own, you might want to check out this other article that goes into [how to design a Node.js application that can be containeraised.](https://learnk8s.io/spring-boot-kubernetes-guide)
 
 Here's how you're going to proceed.
 
@@ -794,9 +794,9 @@ In this section, you learned how to deploy an application to Kubernetes.
 Here's a racap of what you learned:
 
 1. You defined a Deployment for your app.
-2. You created a Service to expose your deployment to outside the cluster.
-3. You created a Deployment for the MongoDB database and to persist its data.
-4. You deployed all of those resources in your local cluster.
-5. You verified that Kubernetes successfully created the resources on your behalf.
+1. You created a Service to expose your deployment to outside the cluster.
+1. You created a Deployment for the MongoDB database and to persist its data.
+1. You deployed all of those resources in your local cluster.
+1. You verified that Kubernetes successfully created the resources on your behalf.
 
 [In the next part, you will learn how to scale your application for high-availability and resiliency.](https://learnk8s.io/scaling-nodejs-kubernetes)

@@ -471,9 +471,9 @@ In this section, you learned how to refactor an app and make it scalable with Ku
 Here's a racap of what you learned:
 
 1. You scaled the application to two instances and noticed that it was stateful.
-2. You refactored the app and externalised the state using an object store — MinIO.
-3. You deployed MinIO in the cluster with persistent storage.
-4. You redeploy the application with the changes.
-5. You scaled the application again and verified that it's stateless. 
+1. You refactored the app and externalised the state using an object store — MinIO.
+1. You deployed MinIO in the cluster with persistent storage.
+1. You redeploy the application with the changes.
+1. You scaled the application again and verified that it's stateless. 
 
 [In the next section, you will create a new Kubernetes cluster in the cloud and deploy your app there!](https://learnk8s.io/deploying-nodejs-kubernetes-eks)

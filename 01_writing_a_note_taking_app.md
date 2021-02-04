@@ -797,8 +797,8 @@ Well done for making it this far!
 Here's a recap of what you've done so far.
 
 1. You created an application using Express.js and MongoDB.
-2. You packaged the app as a container using Docker.
-3. You uploaded the container to Docker Hub — a container registry.
-4. You ran the app and the databases locally using Docker.
+1. You packaged the app as a container using Docker.
+1. You uploaded the container to Docker Hub — a container registry.
+1. You ran the app and the databases locally using Docker.
 
 [In the next section, you will learn how to run your containerised application on Kubernetes!](https://learnk8s.io/deploying-nodejs-kubernetes)
