@@ -501,7 +501,7 @@ First of all, you have to install the Docker Community Edition (CE).
 
 You can follow the instructions in the [official Docker documentation](https://docs.docker.com/install/).
 
-> If you're on Windows, you can [follow our handy guide on how to install Docker on Windows](https://learnk8s.io/blog/installing-docker-and-kubernetes-on-windows/).
+> If you're on Windows, you can [follow our handy guide on how to install Docker on Windows](https://learnk8s.io/installing-docker-kubernetes-windows).
 
 You can verify that Docker is installed correctly with the following command:
 

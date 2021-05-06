@@ -119,7 +119,7 @@ kubectl is the primary Kubernetes CLI — you use it for all interactions with a
 
 **Once kubectl is installed, go on and install Minikube according to the [official documentation](https://kubernetes.io/docs/tasks/tools/install-minikube/).**
 
-> If you're on Windows, you can [follow our handy guide on how to install Minikube on Windows](https://learnk8s.io/blog/installing-docker-and-kubernetes-on-windows/) and if you have issues, [you might find this instructions relevant.](https://gist.github.com/danielepolencic/bdd5d8f7265b849b38cb5f8513a379d8)
+> If you're on Windows, you can [follow our handy guide on how to install Minikube on Windows](https://learnk8s.io/installing-docker-kubernetes-windows) and if you have issues, [you might find this instructions relevant.](https://gist.github.com/danielepolencic/bdd5d8f7265b849b38cb5f8513a379d8)
 
 With Minikube installed, you can create a cluster as follows:
 
