@@ -106,10 +106,9 @@ async function saveNote(db, note) {
 }
 
 async function retrieveNotes(db) {
-  const notes = (await db.find().toArray()).reverse()
-  return notes.map(it => {
-    return { ...it, description: marked(it.description) }
-  })
+  const notes = await db.find().toArray()
+  const sortedNotes = notes.reverse()
+  return sortedNotes.map(it => ({ ...it, description: marked(it.description) }))
 }
 
 start()
