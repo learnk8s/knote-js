@@ -63,8 +63,6 @@ git clone https://github.com/learnk8s/knote-js
 cd knote-js/01
 ```
 
-You should launch and test the app locally.
-
 You can install and start it with:
 
 ```terminal|command=1,2|title=bash
@@ -72,7 +70,7 @@ npm install
 node index.js
 ```
 
-You can visit the app on <http://localhost:3000>.
+The app will be hosted on <http://localhost:3000>.
 
 Try to upload a picture — you should see a link inserted in the text box.
 
@@ -82,9 +80,9 @@ There're a couple of code choices worth discussing.
 
 ## Standard Express.js stack
 
-[Express](https://expressjs.com/) and [Pug](https://pugjs.org/api/getting-started.html) are two popular choices when it comes to web servers and templating engines in Node.js
+[Express](https://expressjs.com/) and [Pug](https://pugjs.org/api/getting-started.html) are two popular choices when it comes to web servers and templating engines in Node.js.
 
-The basic template for a Node.js project with Express and Pug looks like this:
+The basic template for a Node.js project with Express and Pug looks like [this](https://expressjs.com/en/guide/using-template-engines.html).
 
 Now, create an `index.js` file with the following content:
 
@@ -119,11 +117,9 @@ async function start() {
 
 > You can find the pug template [in this repository](https://github.com/learnk8s/knote-js/tree/master/01).
 
-The code is not much more than some standard boilerplate code for an Express app.
+This code is adapted from a simple Express boilerplate app, so it doesn't do anything useful yet.
 
-It doesn't yet do anything useful.
-
-_But you will change this now by connecting it to a database._
+_To enhance it, let's learn to connect it to a database._
 
 ## Connecting a database
 
@@ -154,9 +150,7 @@ _When the app starts, it shouldn't crash because the database isn't ready too._
 
 Instead, the app should keep retrying to connect to the database until it succeeds.
 
-Kubernetes expects that application components can be started in any order.
-
-_If you make this code change, you can deploy your apps to Kubernetes in any order._
+Kubernetes expects that application components can be started in _any order_. In order to achieve this, add the following function to your index.js file.
 
 Add the following function to your `index.js` file:
 
@@ -181,9 +175,7 @@ async function initMongo() {
 }
 ```
 
-This function keeps trying to connect to a MongoDB database at the given URL until the connection succeeds.
-
-It then connects to a database and creates a collection called `notes`.
+With this function, the app will retry continuously to connect to the MongoDB database at the given URL. On a successful connection, it creates a collection called `notes`.
 
 > MongoDB collections are like tables in relational databases — lists of items.
 
@@ -213,8 +205,9 @@ You need a function to retrieve all notes from the database:
 
 ```js|title=index.js
 async function retrieveNotes(db) {
-  const notes = (await db.find().toArray()).reverse()
-  return notes
+  const notes = await db.find().toArray()
+  const sortedNotes = notes.reverse()
+  return sortedNotes
 }
 ```
 
@@ -289,7 +282,7 @@ It then redirects to the main page, so that the newly created note appears immed
 
 You can already run your app at this stage.
 
-But to do so, you need to run MongoDB as well.
+But to do so, you need to start MongoDB as well.
 
 You can install MongoDB following the instructions in the [official MongoDB documentation](https://docs.mongodb.com/manual/installation/).
 
@@ -313,16 +306,16 @@ You should see the main page of the app.
 
 Try to create a note — you should see it being displayed on the main page.
 
-_Your app seems to works._
+_Your app seems to work._
 
-**But it's not yet complete.**
+**But it's not complete yet.**
 
-The following requirements are missing:
+We have not fulfilled the following requirements:
 
-- Markdown text is not formatted but just displayed verbatim
-- Uploading pictures does not yet work
+- Display formatted markdown text (currently it only displays verbatim.)
+- Uploading pictures
 
-_Let's fix those next._
+_Let's work on those next._
 
 ## Rendering Markdown to HTML
 
@@ -344,16 +337,15 @@ const { marked } = require('marked')
 
 Then, change the `retrieveNotes` function as follows (changed lines are highlighted):
 
-```js|highlight=3-5|title=index.js
+```js|highlight=3|title=index.js
 async function retrieveNotes(db) {
-  const notes = (await db.find().toArray()).reverse()
-  return notes.map(it => {
-    return { ...it, description: marked(it.description) }
-  })
+  const notes = await db.find().toArray()
+  const sortedNotes = notes.reverse()
+  return sortedNotes.map(it => ({ ...it, description: marked(it.description) }))
 }
 ```
 
-The new code converts all the notes to HTML before returning them.
+The new code converts the description of all the notes to HTML before returning them.
 
 Restart the app and access it on <http://localhost:3000>.
 
@@ -416,11 +408,10 @@ In the next section, you will learn how to package and run it as a Docker contai
 
 ## Deploying apps with containers
 
-After creating your app, you can think about how to deploy it.
+After creating your app, the next step is to deploy it. There are a few standard ways of deploying an app.
 
-You could deploy our app to a Platform as a Service (PaaS) like [Heroku](https://www.heroku.com/) and forget about the underlying infrastructure and dependencies.
-
-Or you could do it the hard way and provision your own VPS, [install nvm](https://github.com/nvm-sh/nvm), create the appropriate users, configure Node.js as well as [PM2](http://pm2.keymetrics.io/) to restart the app when it crashes and [Nginx](https://www.nginx.com/) to handle TLS and path-based routing.
+1. You could deploy the app to a Platform as a Service (PaaS) like [Heroku](https://www.heroku.com/) and forget about the underlying infrastructure and dependencies.
+1. Or you could do it the hard way and provision your own VPS, [install nvm](https://github.com/nvm-sh/nvm), create the appropriate users, configure Node.js as well as [PM2](http://pm2.keymetrics.io/) to restart the app when it crashes and [Nginx](https://www.nginx.com/) to handle TLS and path-based routing.
 
 However, in recent times, there is a trend to package applications as Linux containers and deploy them to specialised container platforms.
 
@@ -577,7 +568,7 @@ You can create many Docker containers from the same Docker image:
 }
 ```
 
-> Don't believe that Docker images are archives? Save the image locally with `docker save knote > knote.tar` and inspect it.
+> Don't believe that Docker images are archives? Save the image locally with `docker save knote > knote.tar`, then you can run `tar -tf knote.tar` to inspect it.
 
 You can list all the images on your system with the following command:
 
@@ -746,7 +737,7 @@ To rename your image according to this format, run the following command:
 docker tag knote <username>/knote-js:1.0.0
 ```
 
-> Please replace `<username>` with your Docker ID.
+> Please replace `<username>` with your Docker ID, e.g. `lyqht/knote-js:1.0.0`.
 
 **Now you can upload your image to Docker Hub:**
 
@@ -754,11 +745,15 @@ docker tag knote <username>/knote-js:1.0.0
 docker push <username>/knote-js:1.0.0
 ```
 
-Your image is now publicly available as `<username>/knote-js:1.0.0` on Docker Hub and everybody can download and run it.
+Your image is now publicly available as `<username>/knote-js:1.0.0` on Docker Hub and everybody can download and run it. 
+
+You can find the one you uploaded at https://hub.docker.com/repository/docker/your_username/knote-js. 
+
+This is how an example of the uploaded image on DockerHub look like:
+
+![](./assets/dockerhub_uploaded_image.png)
 
 To verify this, you can re-run your app, but this time using the new image name.
-
-> Please notice that the command below runs the `learnk8s/knote-js:1.0.0` image. If you wish to use yours, replace `learnk8s` with your Docker ID.
 
 ```terminal|command=1-5,6-12|title=bash
 docker run \
@@ -772,7 +767,7 @@ docker run \
   --network=knote \
   -p 3000:3000 \
   -e MONGO_URL=mongodb://mongo:27017/dev \
-  learnk8s/knote-js:1.0.0
+  <username>/knote-js:1.0.0
 ```
 
 Everything should work exactly as before.
