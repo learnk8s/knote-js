@@ -339,7 +339,7 @@ npm install marked
 And import it in your `index.js` file:
 
 ```js|title=index.js
-const marked = require('marked')
+const { marked } = require('marked')
 ```
 
 Then, change the `retrieveNotes` function as follows (changed lines are highlighted):
