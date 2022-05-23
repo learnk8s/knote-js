@@ -14,7 +14,7 @@ Kubernetes is designed to help you scale up and down your applications so that y
 
 However, there's a gotcha.
 
-Not all application can be scaled out of the box.
+Not all applications can be scaled out of the box.
 
 If your application is holding any data in memory or on disk, you might not be able to scale it unless it's refactored to be stateless.
 
@@ -22,9 +22,7 @@ But don't worry, you will learn how to do it in this article.
 
 The application which you'll learn to scale today is called Knote.
 
-The [application that you're about to scale](https://learnk8s.io/spring-boot-kubernetes-guide) is already deployed in the cluster.
-
-If you're interested, Here's an article that [demonstrates deploying the application before scaling it](https://learnk8s.io/deploying-nodejs-kubernetes).
+If you have been following along the tutorial series, you would have learnt to deploy this application in a cluster during [the previous chapter](https://learnk8s.io/deploying-nodejs-kubernetes).
 
 This is what you'll be looking at today.
 
@@ -94,7 +92,7 @@ You can watch how a new Pod is created with:
 kubectl get pods -l app=knote --watch
 ```
 
-> The `-l` flag restricts the output to only those Pods with a `app=knote` label.
+> The `-l` flag is an alias for the `--selector` flag.  With this flag, we only select the Pods with the `app=knote` label.
 
 There are now two replicas of the Knote Pod running.
 
@@ -120,7 +118,7 @@ _Why is that?_
 
 Remember that your application saves uploaded pictures in the local file system.
 
-If your app runs in a container, then pictures are saved within the container's file system.
+If your app runs in a container, the pictures are saved only within that container's file system.
 
 When you had only a single Pod, this was fine.
 
@@ -246,13 +244,11 @@ spec:
           imagePullPolicy: Always
 ```
 
-> Please notice that the command below runs the `learnk8s/knote-js:2.0.0` image.
+> Please note that the command runs the `learnk8s/knote-js:2.0.0` image.
 
-The Deployment is ready to be submitted to Kubernetes.
+However, there is still something missing.
 
-However, something else is missing.
-
-You should create a Kubernetes description for the new MinIO component.
+You should create a Kubernetes resource definition for the new MinIO component.
 
 _So, let's do it._
 
@@ -264,11 +260,12 @@ You should be able to guess what the Kubernetes description for MinIO looks like
 
 **It should look like the MongoDB description that you defined in the ["Deploying to Kubernetes" section](https://learnk8s.io/deploying-nodejs-kubernetes#defining-the-database-tier).**
 
-As for MongoDB, MinIO requires persistent storage to save its state.
+Just like MongoDB, MinIO requires the following:
 
-Also like MongoDB, MinIO must be exposed with a Service for Pods inside the cluster.
+- Persistent storage
+- Be accessible to other Pods inside the cluster by using a Service
 
-Here's the complete MinIO configuration:
+Here's the complete MinIO configuration to be saved in `kube/minio.yaml`:
 
 ```yaml|title=kube/minio.yaml
 apiVersion: v1
@@ -330,13 +327,9 @@ spec:
             claimName: minio-pvc
 ```
 
-Go on and save the content in a file named `minio.yaml` in the `kube` directory.
+Just like the YAML file `kube/mongo.yaml`, this file also has a Deployment, Service and PersistenVolumeClaim resource definition. The same concepts and understanding can be applied here.
 
-The YAML file has a Deployment, Service and PersistenVolumeClaim definition.
-
-So, if you recall the MongoDB resource definition, you should have no troubles understanding the MinIO configuration.
-
-You just defined the last of the three components of your application.
+With that, you just defined the last of the three components of your application.
 
 Your Kubernetes configuration is now complete.
 
@@ -411,8 +404,6 @@ Only the Knote component is accessible from outside the cluster — the MongoDB 
 _At the moment, you're running a single Knote container._
 
 But the topic of this section is "scaling".
-
-And you completed some major refactoring to your app to make it stateless and scalable.
 
 _So, let's scale it!_
 
