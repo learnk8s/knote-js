@@ -90,7 +90,7 @@ Popularity is not the only factor, though.
 Kubernetes is:
 
 1. **Open-source:** you can download and use it without paying any fee. You're also encouraged to contribute to the official project with bug fixes and new features
-1. **Battle-tested:** there're plenty of examples of companies running it in production. There's even [a website where you can learn from the mistake of others](https://k8s.af/).
+1. **Battle-tested:** there're plenty of examples of companies running it in production. There's also [a website where you can learn from the mistake of others](https://k8s.af/).
 1. **Well-looked-after:** Redhat, Google, Microsoft, IBM, Cisco are only a few of the companies that have heavily invested in the future of Kubernetes by creating managed services, contributing to upstream development and offering training and consulting.
 
 Kubernetes is an excellent choice to deploy your containerised application.
@@ -117,7 +117,7 @@ Minikube creates a single-node Kubernetes cluster running in a virtual machine.
 
 kubectl is the primary Kubernetes CLI — you use it for all interactions with a Kubernetes cluster, no matter how the cluster was created.
 
-**Once kubectl is installed, go on and install Minikube according to the [official documentation](https://kubernetes.io/docs/tasks/tools/install-minikube/).**
+**Once kubectl is installed, go on and [install Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/).**
 
 > If you're on Windows, you can [follow our handy guide on how to install Minikube on Windows](https://learnk8s.io/blog/installing-docker-and-kubernetes-on-windows/) and if you have issues, [you might find this instructions relevant.](https://gist.github.com/danielepolencic/bdd5d8f7265b849b38cb5f8513a379d8)
 
@@ -149,13 +149,15 @@ In other words, you describe how you want the deployment of your application to 
 
 The "language" that you use to communicate with Kubernetes consists of so-called Kubernetes resources.
 
-There are many different Kubernetes resources — each is responsible for a specific aspect of your application.
+There are many different Kubernetes resources — each is responsible for a specific aspect of your application. Here is a high level overview of the 5 categories of Kubernetes resources.
 
 > You can find the full list of Kubernetes resources in the [Kubernetes API reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/).
 
-Kubernetes resources are defined in YAML files and submitted to the cluster through the Kubernetes HTTP API.
+![](assets/kubernetes-resources-overview.jpeg)
 
-> Kubernetes resource definitions are also sometimes called "resource manifests" or "resource configurations".
+Kubernetes resources are defined in YAML files and submitted to the cluster through the Kubernetes HTTP API. 
+
+These files are referred as Kubernetes resource definitions, and are also sometimes called "resource manifests" or "resource configurations".
 
 As soon as Kubernetes receives your resource definitions, it takes the necessary steps to reach the target state.
 
@@ -186,14 +188,14 @@ If you want to learn how to develop and package applications in container, you s
 
 Here's a quick refresher on what happened in the previous chapter.
 
-1. You created an application using Express.js and MongoDB.
-1. You packaged the app as a container using Docker.
-1. You uploaded the container to Docker Hub — a container registry.
-1. You run the app and the databases locally using Docker.
+1. You created a note-taking application using Express.js and MongoDB.
+2. You ran the app and the databases locally using Docker.
+3. You also packaged the app as a container using Docker.
+4. Finally, you uploaded the container to Docker Hub — a container registry.
 
-In the remainder of this chapter, you will define a set of Kubernetes resources that describe your application, and in the end, you will submit them to your Kubernets cluster.
+In the remainder of this chapter, you will define a set of Kubernetes resources that describe your application, and in the end, you will submit them to your Kubernetes cluster.
 
-All the code is available [in this repository](https://github.com/learnk8s/knote-js/tree/master/03).
+The completed code for all the tutorials in this series can be found [in this repository](https://github.com/learnk8s/knote-js/tree/master).
 
 ## Defining a Deployment
 
@@ -203,13 +205,13 @@ First of all, create a folder named `kube` in your application directory:
 mkdir kube
 ```
 
-The purpose of this folder is to hold all the Kubernetes YAML files that you will create.
+The purpose of this folder is to hold all the Kubernetes resource definition YAML files that you will create.
 
 > It's a [best practice](https://kubernetes.io/docs/concepts/cluster-administration/manage-deployment/#organizing-resource-configurations) to group all resource definitions for an application in the same folder because this allows to submit them to the cluster with a single command.
 
 The first Kubernetes resource is a [Deployment](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#deployment-v1-apps).
 
-A Deployment creates and runs containers and keeps them alive.
+A Deployment creates containers and ensures that they are up and running.
 
 Here is the definition of a Deployment for your Knote app:
 
@@ -269,7 +271,11 @@ kubectl explain deployment.spec.replicas
 
 **Now that you know how to look up the documentation of Kubernetes resources, let's turn back to the Deployment.**
 
-The first four lines define the type of resource (Deployment), the version of this resource type (`apps/v1`), and the name of this specific resource (`knote`):
+The first four lines define: 
+
+- the type of resource (Deployment)
+- the version of this resource type (`apps/v1`), and 
+- the name of this specific resource (`knote`)
 
 ```yaml|highlight=1-4|title=kube/knote.yaml
 apiVersion: apps/v1
@@ -297,7 +303,7 @@ spec:
           imagePullPolicy: Always
 ```
 
-Next, you have the desired number of replicas of your container:
+Next, you declare the desired number of replicas of your container:
 
 ```yaml|highlight=6|title=kube/knote.yaml
 apiVersion: apps/v1
@@ -325,19 +331,19 @@ spec:
           imagePullPolicy: Always
 ```
 
-You don't usually talk about containers in Kubernetes.
+In Kubernetes, usually we talk about Pods rather than containers.
 
-Instead, you talk about Pods.
-
-**What is a Pod?**
+**So what is a Pod?**
 
 A Pod is a wrapper around one or more containers.
 
-Most often, a Pod contains only a single container — however, for advanced use cases, a Pod may contain multiple containers.
+A Pod often contains only a single container — however, for advanced use cases, a Pod may contain _multiple_ containers.
 
-If a Pod contains multiple containers, they are treated by Kubernetes as a unit — for example, they are started and stopped together and executed on the same node.
+![](./assets/what_is_a_pod.jpg)
 
-_A Pod is the smallest unit of deployment in Kubernetes — you never work with containers directly, but with Pods that wrap containers._
+If a Pod contains multiple containers, they are treated by Kubernetes as a unit — this means that they will be started, executed and stopped together on the same node.
+
+A Pod is also the _smallest unit of deployment_ in Kubernetes. Hence usually you never work with containers directly, but rather with Pods - the wrappers of those containers.
 
 Technically, a [Pod](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#pod-v1-core) is a Kubernetes resource, like a Deployment or Service.
 
@@ -436,9 +442,9 @@ A Service forwards requests to a set of Pods:
 
 In this regard, a Service is akin to a load balancer.
 
-Here is the definition of a Service that makes your Knote Pod accessible from outside the cluster:
+Now, let's add a Service resource definition to make your Knote Pod accessible from outside the cluster. We will add this resource definition to the existing YAML file:
 
-```yaml|title=kube/knote.yaml
+```yaml|highlight=1-12|title=kube/knote.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -450,23 +456,35 @@ spec:
     - port: 80
       targetPort: 3000
   type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: knote
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: knote
+  template:
+    metadata:
+      labels:
+        app: knote
+    spec:
+      containers:
+        - name: knote
+          image: learnk8s/knote-js:1.0.0
+          ports:
+            - containerPort: 3000
+          env:
+            - name: MONGO_URL
+              value: mongodb://mongo:27017/dev
+          imagePullPolicy: Always
 ```
+
+Notice that the Service and Deployment resource definitions are together in the same file, and they are separated by the three dashes on line 12.
 
 > Again, to find out about the available fields of a Service, look it up [in the API reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#service-v1-core), or, even better, use `kubectl explain service`.
-
-_Where should you save the above definition?_
-
-It is a [best-practice](https://kubernetes.io/docs/concepts/cluster-administration/manage-deployment/#organizing-resource-configurations) to save resource definitions that belong to the same application in the same YAML file.
-
-To do so, paste the above content at the beginning of your existing `knote.yaml` file, and separate the Service and Deployment resources with three dashes like this:
-
-```yaml|title=kube/knote.yaml
-# ... Deployment YAML definition
----
-# ... Service YAML definition
-```
-
-> You can find the final YAML files for this section in [this repository](https://github.com/learnk8s/knote-js/tree/master/03).
 
 **Let's break down the Service resource.**
 
@@ -494,7 +512,7 @@ In this case, all Pods that have a label of `app: knote` will be exposed by the 
 
 Note how this label corresponds exactly to what you specified for the Pods in the Deployment resource:
 
-```yaml|highlight=10|title=kube/knote.yaml
+```yaml|highlight=9-10|title=kube/knote.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -550,7 +568,10 @@ In this case, the type is `LoadBalancer`, which makes the exposed Pods accessibl
 
 The default Service type is `ClusterIP`, which makes the exposed Pods only accessible from within the cluster.
 
-> **Pro tip:** find out about all available Service types with `kubectl explain service.spec.type`.
+> **Pro tip:** find out about all available Service types with
+> ```
+> kubectl explain service.spec.type
+> ```
 
 Beyond exposing your containers, a Service also ensures continuous availability for your app.
 
@@ -568,9 +589,11 @@ Also, when the Pod is restarted, and a new IP address is assigned, the Service a
 
 Furthermore, if you decide to scale your Deployment to 2, 3, 4, or 100 replicas, the Service keeps track of all of these Pods.
 
-This completes the description of your app — a Deployment and Service is all you need.
+This completes the resource definition YAML file that describes your app — a Deployment and Service is all you need.
 
-_You need to do the same thing for the database component now._
+**But we are not done yet.**
+
+_You need to do the same thing for the database component too._
 
 ## Defining the database tier
 
@@ -592,9 +615,11 @@ Consequently, the description of your database component should consist of three
 - Service
 - Deployment
 
-Here's the complete configuration:
+Create a new file named `mongo.yaml` in the `kube` directory for the resource definitions of the database component. 
 
-```yaml|title=kube/mongo.yaml
+Here's the complete configuration, note the new resource definition for `kind: PersistentVolumeClaim`:
+
+```yaml|highlight=1-10|title=kube/mongo.yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -644,8 +669,6 @@ spec:
             claimName: mongo-pvc
 ```
 
-Please save this YAML definition in a file named `mongo.yaml` in the `kube` directory.
-
 Let's look at each of the three parts of the definition.
 
 **PersistentVolumeClaim**
@@ -694,7 +717,7 @@ _Why is it `mongo`?_
 
 Because the name of the MongoDB Service is `mongo`.
 
-If you named your MongoDB service `foo`, then you would need to change the value of the `MONGO_URL` variable to `monogdb://foo:27017`.
+If you named your MongoDB service `foo`, then you would need to change the value of the `MONGO_URL` variable to `mongodb://foo:27017/dev`.
 
 Service discovery is a critical Kubernetes concept.
 
