@@ -286,16 +286,16 @@ But to do so, you need to start MongoDB as well.
 
 You can install MongoDB following the instructions in the [official MongoDB documentation](https://docs.mongodb.com/manual/installation/).
 
-Once MongoDB is installed, start a MongoDB server with:
+Once MongoDB is installed, create an empty folder `data/db` and run the following to start a MongoDB server which points the db path to the folder that you just created:
 
 ```terminal|command=1|title=bash
-mongod
+npm run mongodb -- --dbpath ./data/db
 ```
 
 Now run your app with:
 
 ```terminal|command=1|title=bash
-node index.js
+npm run start
 ```
 
 The app should connect to MongoDB and then listen for requests.
