@@ -228,17 +228,16 @@ The application is made of two parts:
 1. A front-end written in Node.js and Express.
 1. A MongoDB to persist the data.
 
-If you want to learn how to develop and package the application in a Docker container, [you might want to read this chapter of the course.](https://learnk8s.io/developing-and-packaging-nodejs-docker)
-
-If you need help to set up a local Kubernetes cluster or deploy the application on Kubernetes, [you might want to read this other chapter.](https://learnk8s.io/deploying-nodejs-kubernetes)
-
-If you want to know how this app was refactored to scale horizontally, [you might want to read this chapter instead.](https://learnk8s.io/scaling-nodejs-kubernetes)
+Before we continue, here are the links to the previous chapters of this series:
+- If you want to learn how to develop and package the application in a Docker container, [refer to this chapter of the course.](https://learnk8s.io/developing-and-packaging-nodejs-docker)
+- If you need help to set up a local Kubernetes cluster or deploy the application on Kubernetes, [refer to this other chapter.](https://learnk8s.io/deploying-nodejs-kubernetes)
+- If you want to know how this app was refactored to scale horizontally, [refer to this chapter instead.](https://learnk8s.io/scaling-nodejs-kubernetes)
 
 All the code to build and deploy the app is available [in this repository](https://github.com/learnk8s/knote-js/tree/master/05).
 
 The code contains the YAML Kubernetes definitions for Deployments and Services for minikube.
 
-_Do the workloads in YAML work on Amazon EKS without any changes?_
+_Do these YAML resource definitions still work on Amazon EKS without any changes?_
 
 It's time to find out.
 
