@@ -111,6 +111,28 @@ aws_access_key_id=[access-key-id]
 aws_secret_access_key=[secret-access-key]
 ```
 
+_Remember to include the `[default]` in the file!_
+
+Now, you can [install the aws-cli](https://github.com/aws/aws-cli)
+
+```
+sudo python -m pip install awscli
+```
+
+
+If you are authenticated, when you run the command below
+```
+aws eks list-clusters --region=us-east-1
+```
+
+You should get a valid response as such if you have not created any clusters before.
+
+```
+{
+    "clusters": []
+}
+```
+
 _That's it! You're an AWS user now._
 
 ## Creating a Kubernetes cluster on AWS
