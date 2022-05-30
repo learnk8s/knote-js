@@ -229,6 +229,8 @@ Since the worker nodes are regular Amazon EC2 instances in your AWS account, you
 
 You can also inspect the Amazon EKS resource itself in your AWS account in the [AWS EKS Console](https://eu-west-2.console.aws.amazon.com/eks/home?region=eu-west-2#/clusters).
 
+![](assets/aws-eks-console.png)
+
 As you can see, your Amazon EKS cluster has further related resources — they handle all the aspects that are required for a production-grade cluster such as networking, access control, security, and logging.
 
 Those resources are created by eksctl.
@@ -365,17 +367,24 @@ First, check how many Pods are running in your cluster right now:
 kubectl get pods --all-namespaces
 ```
 
-You should see 9 Pods — the 3 Pods of your application and six system Pods.
+You should see 9 Pods — the 3 Pods that are part of your application (`minio`, `mongo` and `knote`) and 6 system Pods.
 
 > Kubernetes runs some system Pods on your worker nodes in the `kube-system` namespace. These Pods count against the limit too. The `--all-namespaces` flag outputs the Pods from all namespaces of the cluster.
 
-_So, how many replicas of the Knote Pod can you run in the cluster?_
+_So, how many replicas of the `knote` Pod can you run in the cluster?_
 
-8 Pods are _not_ Knote Pods, and 58 is the maximum number of Pods that can run in the cluster.
+Let's do some math.
 
-Hence, there can be up to 50 replicas of the Knote Pod.
+58 is the maximum number of Pods that can run in the cluster. 
 
-Let's exceed this limit on purpose to observe what happens.
+You have: 
+- 6 system pods
+- 1 pod for `minio`
+- 1 pod for `mongo`
+
+That means that you can have **up to 50 replicas** of the `knote` Pod.
+
+_Let's exceed this limit on purpose to observe what happens._
 
 Scale your Knote app to 60 replicas:
 
