@@ -751,7 +751,7 @@ docker tag knote <username>/knote-js:1.0.0
 docker push <username>/knote-js:1.0.0
 ```
 
-Your image is now publicly available as `<username>/knote-js:1.0.0` on Docker Hub and everybody can download and run it. 
+Your image is now publicly available as `<username>/knote-js:1.0.0` on Docker Hub and everybody can download and run it.
 
 You can find the one you uploaded at https://hub.docker.com/repository/docker/your_username/knote-js. 
 
