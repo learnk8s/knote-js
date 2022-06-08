@@ -149,7 +149,9 @@ In other words, you describe how you want the deployment of your application to 
 
 The "language" that you use to communicate with Kubernetes consists of so-called Kubernetes resources.
 
-There are many different Kubernetes resources — each is responsible for a specific aspect of your application. Here is a high level overview of the 5 categories of Kubernetes resources.
+There are many different Kubernetes resources — each is responsible for a specific aspect of your application. 
+
+Here is a high level overview of the 5 categories of Kubernetes resources.
 
 > You can find the full list of Kubernetes resources in the [Kubernetes API reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/).
 
@@ -273,9 +275,9 @@ kubectl explain deployment.spec.replicas
 
 The first four lines define: 
 
-- the type of resource (Deployment)
-- the version of this resource type (`apps/v1`), and 
-- the name of this specific resource (`knote`)
+- The type of resource (Deployment).
+- The version of this resource type (`apps/v1`). 
+- The name of this specific resource (`knote`).
 
 ```yaml|highlight=1-4|title=kube/knote.yaml
 apiVersion: apps/v1
@@ -442,7 +444,9 @@ A Service forwards requests to a set of Pods:
 
 In this regard, a Service is akin to a load balancer.
 
-Now, let's add a Service resource definition to make your Knote Pod accessible from outside the cluster. We will add this resource definition to the existing YAML file:
+Now, let's add a Service resource definition to make your Knote Pod accessible from outside the cluster. 
+
+We will add this resource definition to the existing YAML file:
 
 ```yaml|highlight=1-12|title=kube/knote.yaml
 apiVersion: v1
