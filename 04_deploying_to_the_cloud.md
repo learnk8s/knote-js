@@ -115,19 +115,16 @@ _Remember to include the `[default]` in the file!_
 
 Now, you can [install the aws-cli](https://github.com/aws/aws-cli)
 
-```
+```terminal|command=1|title=bash
 sudo python -m pip install awscli
 ```
 
 
-If you are authenticated, when you run the command below
-```
+If you are authenticated, when you run the command below, you should get a valid response as such if you have not created any clusters before.
+
+```terminal|command=1|title=bash
 aws eks list-clusters --region=us-east-1
-```
 
-You should get a valid response as such if you have not created any clusters before.
-
-```
 {
     "clusters": []
 }

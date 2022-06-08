@@ -82,7 +82,7 @@ There're a couple of code choices worth discussing.
 
 [Express](https://expressjs.com/) and [Pug](https://pugjs.org/api/getting-started.html) are two popular choices when it comes to web servers and templating engines in Node.js.
 
-The basic template for a Node.js project with Express and Pug looks like [this](https://expressjs.com/en/guide/using-template-engines.html).
+This is how [a basic template for a Node.js project with Express and Pug](https://expressjs.com/en/guide/using-template-engines.html) looks like.
 
 Now, create an `index.js` file with the following content:
 
@@ -150,7 +150,9 @@ _When the app starts, it shouldn't crash because the database isn't ready too._
 
 Instead, the app should keep retrying to connect to the database until it succeeds.
 
-Kubernetes expects that application components can be started in _any order_. In order to achieve this, add the following function to your index.js file.
+Kubernetes expects that application components can be started in _any order_. 
+
+In order to achieve this, add the following function to your index.js file.
 
 Add the following function to your `index.js` file:
 
@@ -175,7 +177,9 @@ async function initMongo() {
 }
 ```
 
-With this function, the app will retry continuously to connect to the MongoDB database at the given URL. On a successful connection, it creates a collection called `notes`.
+With this function, the app will retry continuously to connect to the MongoDB database at the given URL. 
+
+On a successful connection, it creates a collection called `notes`.
 
 > MongoDB collections are like tables in relational databases — lists of items.
 
@@ -408,7 +412,9 @@ In the next section, you will learn how to package and run it as a Docker contai
 
 ## Deploying apps with containers
 
-After creating your app, the next step is to deploy it. There are a few standard ways of deploying an app.
+After creating your app, the next step is to deploy it.
+
+There are a few standard ways of deploying an app.
 
 1. You could deploy the app to a Platform as a Service (PaaS) like [Heroku](https://www.heroku.com/) and forget about the underlying infrastructure and dependencies.
 1. Or you could do it the hard way and provision your own VPS, [install nvm](https://github.com/nvm-sh/nvm), create the appropriate users, configure Node.js as well as [PM2](http://pm2.keymetrics.io/) to restart the app when it crashes and [Nginx](https://www.nginx.com/) to handle TLS and path-based routing.

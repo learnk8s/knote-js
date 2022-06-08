@@ -327,7 +327,9 @@ spec:
             claimName: minio-pvc
 ```
 
-Just like the YAML file `kube/mongo.yaml`, this file also has a Deployment, Service and PersistenVolumeClaim resource definition. The same concepts and understanding can be applied here.
+Just like the YAML file `kube/mongo.yaml`, this file also has a Deployment, Service and PersistenVolumeClaim resource definition.
+
+The same concepts and understanding can be applied here.
 
 With that, you just defined the last of the three components of your application.
 
