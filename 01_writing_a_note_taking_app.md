@@ -1,14 +1,6 @@
-**TL;DR:** In chapter 1 of this mini-series, you'll learn how to create a note-taking app, containerize it, and upload it to Docker Hub.
+In this series, you'll learn to develop an app using Node.js, deploy it to a local Kubernetes cluster, scale it, and deploy it to Amazon Web Services on a production-grade Kubernetes cluster.
 
-So you want to get started with Kubernetes, but don't understand where to begin.
-
-In order to get comfortable with a new tool, you need hands-on experience to use it effectively.
-
-That's why this mini-series was created.
-
-In this series, you'll learn to develop an app using Node.js, deploy it to a local Kubernetes cluster, scale the app, and deploy it to Amazon Web Services on a production-grade Kubernetes cluster.
-
-And in this particular article, you'll cover the development of an app that you'll use throughout this series.
+And in this particular article, you'll cover the development of an app you'll use throughout this series.
 
 Here's how the development will unfold.
 
@@ -27,9 +19,9 @@ Here's how the development will unfold.
 1. [Uploading the container image to a container registry](#uploading-the-container-image-to-a-container-registry)
 1. [Recap and next steps](#recap-and-next-steps)
 
-## Knote — a note taking app
+## Knote — a note-taking app
 
-The essential ingredient to learn how to deploy and scale applications in Kubernetes is the application itself.
+The essential ingredient to learning how to deploy and scale applications in Kubernetes is the application itself.
 
 As you'll learn throughout this course, **mastering Kubernetes doesn't guarantee that you have zero incidents in production.**
 
@@ -37,20 +29,20 @@ If your application isn't designed to be resilient and observable, the risk of d
 
 Learning how to design and architect applications that leverage Kubernetes is crucial.
 
-And that's exactly what you will learn in this this part of the course.
+And that's precisely what you will learn in this part of the course.
 
-Now you will develop a small application for note taking similar to [Evernote](https://evernote.com/) and [Google Keep](https://www.google.com/keep/).
+Now you will develop a small application for note-taking similar to [Evernote](https://evernote.com/) and [Google Keep](https://www.google.com/keep/).
 
 The app should let you:
 
-1. record notes and
-1. attach images to your notes
+1. Record notes and
+1. Attach images to your notes.
 
 Notes aren't lost when the app is killed or stopped.
 
 So you will use a database to store the content.
 
-Here is how the app looks like:
+Here is what the app looks like:
 
 ![Adding images and notes in Knote](assets/knote-add-image.gif)
 
@@ -82,7 +74,7 @@ There're a couple of code choices worth discussing.
 
 [Express](https://expressjs.com/) and [Pug](https://pugjs.org/api/getting-started.html) are two popular choices when it comes to web servers and templating engines in Node.js.
 
-This is how [a basic template for a Node.js project with Express and Pug](https://expressjs.com/en/guide/using-template-engines.html) looks like.
+This is what [a basic template for a Node.js project with Express and Pug](https://expressjs.com/en/guide/using-template-engines.html) looks like.
 
 Now, create an `index.js` file with the following content:
 
@@ -125,7 +117,7 @@ _To enhance it, let's learn to connect it to a database._
 
 The database will store the notes.
 
-_What database should you use? MySQL? Redis? Oracle?_
+_What database should you use? MySQL? Redis?_
 
 [MongoDB](https://www.mongodb.com/) is well-suited for your note-taking application because it's easy to set up and doesn't introduce the overhead of a relational database.
 
@@ -146,13 +138,13 @@ Now your code needs to connect to the MongoDB server.
 
 **You have to consider something important here.**
 
-_When the app starts, it shouldn't crash because the database isn't ready too._
+_When the app starts, it shouldn't crash because the database isn't ready._
 
-Instead, the app should keep retrying to connect to the database until it succeeds.
+Instead, the app should keep trying to connect to the database until it succeeds.
 
-Kubernetes expects that application components can be started in _any order_. 
+Kubernetes expects that application components can be started in _any order_ and retrying solves that.
 
-In order to achieve this, add the following function to your index.js file.
+To achieve this, add the following function to your index.js file.
 
 Add the following function to your `index.js` file:
 
@@ -177,7 +169,7 @@ async function initMongo() {
 }
 ```
 
-With this function, the app will retry continuously to connect to the MongoDB database at the given URL. 
+With this function, the app will continuously retry to connect to the MongoDB database at the URL.
 
 On a successful connection, it creates a collection called `notes`.
 
@@ -192,7 +184,7 @@ async function start() {
 }
 ```
 
-Note how the `await` keyword blocks the execution of the app until the database is ready.
+Note how the `await` keyword blocks the app's execution until the database is ready.
 
 _The next step is to use the database._
 
@@ -200,8 +192,8 @@ _The next step is to use the database._
 
 When the main page of your app loads, two things happen:
 
-- All the existing notes are displayed
-- Users can create new notes through an HTML form
+- All the existing notes are displayed.
+- Users can create new notes through an HTML form.
 
 _Let's address the displaying of existing notes first._
 
@@ -215,7 +207,7 @@ async function retrieveNotes(db) {
 }
 ```
 
-The route of the main page is `/`, so you have to add a corresponding route to your Express app that retrieves all the notes from the database and displays them:
+The route of the main page is `/`, so you have to add a corresponding route to your Express app that retrieves all the notes from the database and displays them.
 
 Change the route inside the `start` function in your `index.js` file to:
 
@@ -243,7 +235,7 @@ async function saveNote(db, note) {
 
 The form for creating notes is defined in the `index.pug` template.
 
-Note that it handles both the creation of notes and uploading of pictures.
+Note that it handles both the creation of notes and the uploading of pictures.
 
 You should use [Multer](https://github.com/expressjs/multer), a middleware for multi-part form data, to handle the uploaded data.
 
@@ -280,7 +272,7 @@ async function start() {
 
 The above handler calls the `saveNote` function with the content of the text box, which causes the note to be saved in the database.
 
-It then redirects to the main page, so that the newly created note appears immediately on the screen.
+It then redirects to the main page so that the newly created note appears immediately on the screen.
 
 **Your app is functional now (although not yet complete)!**
 
@@ -290,7 +282,7 @@ But to do so, you need to start MongoDB as well.
 
 You can install MongoDB following the instructions in the [official MongoDB documentation](https://docs.mongodb.com/manual/installation/).
 
-Once MongoDB is installed, create an empty folder `data/db` and run the following to start a MongoDB server which points the db path to the folder that you just created:
+Once MongoDB is installed, create an empty folder `data/db` and run the following to start a MongoDB server which points the DB path to the folder that you just created:
 
 ```terminal|command=1|title=bash
 npm run mongodb -- --dbpath ./data/db
@@ -308,7 +300,7 @@ You can access your app on <http://localhost:3000>.
 
 You should see the main page of the app.
 
-Try to create a note — you should see it being displayed on the main page.
+Try to create a note — you should see it displayed on the main page.
 
 _Your app seems to work._
 
@@ -316,8 +308,8 @@ _Your app seems to work._
 
 We have not fulfilled the following requirements:
 
-- Display formatted markdown text (currently it only displays verbatim.)
-- Uploading pictures
+- Display formatted markdown text (currently, it only displays verbatim).
+- Uploading pictures.
 
 _Let's work on those next._
 
@@ -333,7 +325,7 @@ As always, install the package first:
 npm install marked
 ```
 
-And import it in your `index.js` file:
+And import it into your `index.js` file:
 
 ```js|title=index.js
 const { marked } = require('marked')
@@ -363,7 +355,7 @@ When a user uploads a picture, the file should be saved on disk, and a link shou
 
 This is similar to how adding pictures on StackOverflow works.
 
-> Note that for this to work, the picture upload handler must have access to the text box — this is the reason that picture uploading and note creation are combined in the same form.
+> Note that for this to work, the picture upload handler must have access to the text box — this is why picture uploading and note creation are combined in the same form.
 
 For now, the pictures will be stored on the local file system.
 
@@ -419,7 +411,7 @@ There are a few standard ways of deploying an app.
 1. You could deploy the app to a Platform as a Service (PaaS) like [Heroku](https://www.heroku.com/) and forget about the underlying infrastructure and dependencies.
 1. Or you could do it the hard way and provision your own VPS, [install nvm](https://github.com/nvm-sh/nvm), create the appropriate users, configure Node.js as well as [PM2](http://pm2.keymetrics.io/) to restart the app when it crashes and [Nginx](https://www.nginx.com/) to handle TLS and path-based routing.
 
-However, in recent times, there is a trend to package applications as Linux containers and deploy them to specialised container platforms.
+However, there has recently been a trend to package applications as Linux containers and deploy them to specialised container platforms.
 
 _So what are containers?_
 
@@ -427,9 +419,9 @@ _So what are containers?_
 
 Linux containers are often compared to shipping containers.
 
-Shipping containers have a standard format, and they allow to isolate goods in one container from goods in another.
+Shipping containers have a standard format, allowing them to isolate goods in one container from goods in another.
 
-Goods that belong together are packed in the same container, goods that have nothing to do with each other are packed in separate containers.
+Goods that belong together are packed in the same container, and goods that have nothing to do with each other are packed in separate containers.
 
 _Linux containers are similar._
 
@@ -439,7 +431,7 @@ _Linux containers are similar._
 
 A container contains everything that is needed to run a process.
 
-That means that you can run a process without having to install any dependency on your machine because the container has all you need.
+That means you can run a process without installing any dependency on your machine because the container has all you need.
 
 Furthermore, the process in a container is isolated from everything else around it.
 
@@ -451,24 +443,24 @@ Bundling dependency and isolating processes might remind you of virtual machines
 
 **However, containers are different from virtual machines.**
 
-The process in a container still executes on the kernel of the host machine.
+The process in a container still executes on the host machine's kernel.
 
-With virtual machines, you run an entire guest operating system on top of your host operating system, and the processes that you want to execute on top of that.
+With virtual machines, you run an entire guest operating system on top of your host operating system and the processes that you want to execute on top of that.
 
-Containers are much more lightweight than virtual machines.
+Containers are just processes!
 
 **How do containers work?**
 
 The magic of containers comes from two features in the Linux kernel:
 
-- Control groups (cgroups)
-- Namespaces
+- Control groups (cgroups).
+- Namespaces.
 
 These are low-level Linux primitives.
 
-Control groups limit the resources a process can use, such as memory and CPU.
+Control groups limit a process's resources, such as memory and CPU.
 
-_You might want to limit your container to only use up to 512 MB of memory and 10% of CPU time._
+_You might want to limit your container to only use up to 512 MB of memory and 10% CPU time._
 
 Namespaces limit what a process can see.
 
@@ -484,7 +476,7 @@ These abstractions resulted in container systems.
 
 One of the first container systems was [LXC](https://linuxcontainers.org/).
 
-But the container breakthrough came with [Docker](https://www.docker.com/) which was released in 2013.
+But the container breakthrough came with [Docker](https://www.docker.com/), which was released in 2013.
 
 > Docker isn't the only Linux container technology. There are other popular projects such as [rkt](https://github.com/rkt/rkt) and [containerd](https://containerd.io/).
 
@@ -494,7 +486,7 @@ _Let's get started!_
 
 ## Containerising the app
 
-First of all, you have to install the Docker Community Edition (CE).
+First, you must install the Docker Community Edition (CE).
 
 You can follow the instructions in the [official Docker documentation](https://docs.docker.com/install/).
 
@@ -517,12 +509,12 @@ A Dockerfile is like a recipe — it defines what goes in a container.
 
 A Dockerfile consists of a sequence of commands.
 
-You can find the full list of commands in the [Dockerfile reference](https://docs.docker.com/engine/reference/builder/).
+You can find the complete list of commands in the [Dockerfile reference](https://docs.docker.com/engine/reference/builder/).
 
 Here is a Dockerfile that packages your app into a container image:
 
 ```docker|title=Dockerfile
-FROM node:12.0-slim
+FROM node:18.0-slim
 COPY . .
 RUN npm install
 CMD [ "node", "index.js" ]
@@ -532,10 +524,10 @@ Go on and save this as `Dockerfile` in the root directory of your app.
 
 The above Dockerfile includes the following commands:
 
-- [`FROM`](https://docs.docker.com/engine/reference/builder/#from) defines the base layer for the container, in this case, a version of Ubuntu with Node.js installed
-- [`COPY`](https://docs.docker.com/engine/reference/builder/#copy) copies the files of your app into the container
-- [`RUN`](https://docs.docker.com/engine/reference/builder/#run) executes `npm install` inside the container
-- [`CMD`](https://docs.docker.com/engine/reference/builder/#cmd) defines the command that should be executed when the container starts
+- [`FROM`](https://docs.docker.com/engine/reference/builder/#from) defines the base layer for the container, in this case, a version of Ubuntu with Node.js installed.
+- [`COPY`](https://docs.docker.com/engine/reference/builder/#copy) copies your app files into the container.
+- [`RUN`](https://docs.docker.com/engine/reference/builder/#run) executes `npm install` inside the container.
+- [`CMD`](https://docs.docker.com/engine/reference/builder/#cmd) defines the command that should be executed when the container starts.
 
 You can now build a container image from your app with the following command:
 
@@ -545,16 +537,32 @@ docker build -t knote .
 
 Note the following about this command:
 
-- `-t knote` defines the name ("tag") of your container — in this case, your container is just called `knote`
-- `.` is the location of the Dockerfile and application code — in this case, it's the current directory
+- `-t knote` defines the name ("tag") of your container — in this case, your container is just called `knote`.
+- `.` is the location of the Dockerfile and application code — in this case, it's the current directory.
 
 The command executes the steps outlined in the `Dockerfile`, one by one:
 
-```animation
+```slideshow
 {
-  "description": "Layers in Docker images",
-  "animation": "assets/layers.svg",
-  "fallback": "assets/layers-fallback.svg"
+  "description": "Layers in containers images",
+  "slides": [
+    {
+      "image": "assets/build-1.svg",
+      "description": "The first layer is called the base layer. All subsequent layers are built on top of this."
+    },
+    {
+      "image": "assets/build-2.svg",
+      "description": "The `COPY` instruction copies the file on the host inside the container. The action creates a new layer."
+    },
+    {
+      "image": "assets/build-3.svg",
+      "description": "A new layer is created when the `RUN` command is executed, and the packages are installed."
+    },
+    {
+      "image": "assets/build-4.svg",
+      "description": "The result is a container image made of several layers."
+    }
+  ]
 }
 ```
 
@@ -562,17 +570,11 @@ The command executes the steps outlined in the `Dockerfile`, one by one:
 
 _What is a Docker image?_
 
-A Docker image is an archive containing all the files that go in a container.
+A Docker image is an archive containing all the files in a container.
 
 You can create many Docker containers from the same Docker image:
 
-```animation
-{
-  "description": "Relationship between Dockerfiles, images and containers",
-  "animation": "assets/dockerfile-image-container.svg",
-  "fallback": "assets/docker-image-container-fallback.svg"
-}
-```
+![Dockerfiles, images and containers](assets/dockerfile-image-containers-1.svg)
 
 > Don't believe that Docker images are archives? Save the image locally with `docker save knote > knote.tar`, then you can run `tar -tf knote.tar` to inspect it.
 
@@ -587,7 +589,7 @@ node          12-slim     d9bfca6c7741     2 weeks ago        150MB
 
 You should see the `knote` image that you built.
 
-You should also see the `node:12-slim` which is the base layer of your `knote` image — it is just an ordinary image as well, and the `docker run` command downloaded it automatically from Docker Hub.
+You should also see the `node:18-slim`, which is the base layer of your `knote` image — it is just an ordinary image as well, and the `docker run` command downloaded it automatically from [Docker Hub.](https://hub.docker.com/)
 
 > Docker Hub is a container registry — a place to distribute and share container images.
 
@@ -601,7 +603,7 @@ In the previous section, you installed MongoDB on your machine and ran it with t
 
 You could do the same now.
 
-_But guess what: you can run MongoDB as a container too._
+_But guess what: you can also run MongoDB as a container._
 
 MongoDB is provided as a Docker image named [`mongo`](https://hub.docker.com/_/mongo?tab=description) on Docker Hub.
 
@@ -611,7 +613,7 @@ You can run it with `docker run mongo`.
 
 **But before you do that, you need to connect the containers.**
 
-The `knote` and `mongo` cointainers should communicate with each other, but they can do so only if they are on the same [Docker network](https://docs.docker.com/network/).
+The `knote` and `mongo` containers should communicate with each other, but they can do so only if they are on the same [Docker network](https://docs.docker.com/network/).
 
 So, create a new Docker network as follows:
 
@@ -639,7 +641,7 @@ Note that the `docker run` command automatically downloads the `mongo` image fro
 
 MongoDB is now running.
 
-**Now you can run your app as follows:**
+**Now, you can run your app as follows:**
 
 ```terminal|command=1-7|title=bash
 docker run \
@@ -653,11 +655,11 @@ docker run \
 
 Note the following about this command:
 
-- `--name` defines the name for the container
-- `--rm` automatically cleans up the container and removes the file system when the container exits
-- `--network` represents the Docker network in which the container should run
-- `-p 3000:3000` publishes port 3000 of the container to port 3000 of your local machine. That means, if you now access port 3000 on your computer, the request is forwarded to port 3000 of the Knote container. You can use the forwarding to access the app from your local machine.
-- `-e` sets an environment variable inside the container
+- `--name` defines the name for the container.
+- `--rm` automatically cleans up the container and removes the file system when the container exits.
+- `--network` represents the Docker network in which the container should run.
+- `-p 3000:3000` publishes port 3000 of the container to port 3000 of your local machine. That means, if you now access port 3000 on your computer, the request is forwarded to port 3000 of the Knote container. You can use forwarding to access the app from your local machine.
+- `-e` sets an environment variable inside the container.
 
 Regarding the last point, remember that your app reads the URL of the MongoDB server to connect to from the `MONGO_URL` environment variable.
 
@@ -665,11 +667,11 @@ If you look closely at the value of `MONGO_URL`, you see that the hostname is `m
 
 _Why is it `mongo` and not an IP address?_
 
-`mongo` is precisely the name that you gave to the MongoDB container with the `--name=mongo` flag.
+`mongo` is the name you gave to the MongoDB container with the `--name=mongo` flag.
 
 If you named your MongoDB container `foo`, then you would need to change the value of `MONGO_URL` to `mongodb://foo:27017`.
 
-**Containers in the same Docker network can talk to each other by their names.**
+**Containers in the same Docker network can talk to each other by name.**
 
 This is made possible by a built-in DNS mechanism.
 
@@ -707,7 +709,7 @@ docker rm mongo knote
 
 Imagine you want to share your app with a friend — how would you go about sharing your container image?
 
-Sure, you could save the image to disk and send it to your friend.
+You could save the image to disk and send it to your friend.
 
 _But there is a better way._
 
@@ -717,7 +719,7 @@ _You could create your images and upload them to DockerHub._
 
 If your friend doesn't have the image locally, Docker automatically pulls the image from DockerHub.
 
-> There exist other public container registries, such as [Quay](https://quay.io/) — however, Docker Hub is the default registry used by Docker.
+> There exist other public container registries, such as [the GitHub Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry) — however, Docker Hub is the default registry used by Docker.
 
 **To use Docker Hub, you first have to [create a Docker ID](https://hub.docker.com/signup).**
 
@@ -733,9 +735,9 @@ Before you can upload your image, there is one last thing to do.
 
 **Images uploaded to Docker Hub must have a name of the form `username/image:tag`:**
 
-- `username` is your Docker ID
-- `image` is the name of the image
-- `tag` is an optional additional attribute — often it is used to indicate the version of the image
+- `username` is your Docker ID.
+- `image` is the name of the image.
+- `tag` is an optional additional attribute — often, it is used to indicate the version of the image.
 
 To rename your image according to this format, run the following command:
 
@@ -751,15 +753,11 @@ docker tag knote <username>/knote-js:1.0.0
 docker push <username>/knote-js:1.0.0
 ```
 
-Your image is now publicly available as `<username>/knote-js:1.0.0` on Docker Hub and everybody can download and run it.
+Your image is now publicly available as `<username>/knote-js:1.0.0` on Docker Hub, and everybody can download and run it.
 
-You can find the one you uploaded at https://hub.docker.com/repository/docker/your_username/knote-js. 
+You can find the one you uploaded at <https://hub.docker.com/repository/docker/your_username/knote-js>.
 
-This is how an example of the uploaded image on DockerHub look like:
-
-![](./assets/dockerhub_uploaded_image.png)
-
-To verify this, you can re-run your app, but this time using the new image name.
+You can re-run your app using the new image name to verify this.
 
 ```terminal|command=1-5,6-12|title=bash
 docker run \

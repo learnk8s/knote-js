@@ -119,7 +119,6 @@ Now, you can [install the aws-cli](https://github.com/aws/aws-cli)
 sudo python -m pip install awscli
 ```
 
-
 If you are authenticated, when you run the command below, you should get a valid response as such if you have not created any clusters before.
 
 ```terminal|command=1|title=bash
@@ -226,7 +225,7 @@ Since the worker nodes are regular Amazon EC2 instances in your AWS account, you
 
 You can also inspect the Amazon EKS resource itself in your AWS account in the [AWS EKS Console](https://eu-west-2.console.aws.amazon.com/eks/home?region=eu-west-2#/clusters).
 
-![](assets/aws-eks-console.png)
+![null](assets/aws-eks-console.png)
 
 As you can see, your Amazon EKS cluster has further related resources — they handle all the aspects that are required for a production-grade cluster such as networking, access control, security, and logging.
 
@@ -250,6 +249,7 @@ The application is made of two parts:
 1. A MongoDB to persist the data.
 
 Before we continue, here are the links to the previous chapters of this series:
+
 - If you want to learn how to develop and package the application in a Docker container, [refer to this chapter of the course.](https://learnk8s.io/developing-and-packaging-nodejs-docker)
 - If you need help to set up a local Kubernetes cluster or deploy the application on Kubernetes, [refer to this other chapter.](https://learnk8s.io/deploying-nodejs-kubernetes)
 - If you want to know how this app was refactored to scale horizontally, [refer to this chapter instead.](https://learnk8s.io/scaling-nodejs-kubernetes)
@@ -375,6 +375,7 @@ Let's do some math.
 58 is the maximum number of Pods that can run in the cluster. 
 
 You have: 
+
 - 6 system pods
 - 1 pod for `minio`
 - 1 pod for `mongo`
