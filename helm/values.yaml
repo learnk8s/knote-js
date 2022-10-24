@@ -1,0 +1,94 @@
+# Default values for #TEMPLATE_NAME#.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: 353215401403.dkr.ecr.eu-west-1.amazonaws.com/#TEMPLATE_NAME#
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: "#TEMPLATE_NAME#"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8080
+  healthPort: 8778
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 700Mi
+#  requests:
+  #  cpu: 100m
+  #  memory: 300Mi
+
+health:
+  initialDelaySeconds: 80
+  timeoutSeconds: 2
+  periodSeconds: 10
+  failureThreshold: 2
+  successThreshold: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+env:
+- name: DT_ONEAGENT_PREFIX_DIR
+  value: /tmp
+- name: DT_ONEAGENT_FOR
+  value: all
+- name: DT_AGENT_BITNESS
+  value: "64"
+- name: TZ
+  value: Etc/UTC
+- name: ENVIRONMENT
+  value: TEMPLATE_ENVIRONMENT
+- name: SPRING_CONFIG_LOCATION
+  value: file:///etc/configmap/
+- name: DT_NODE_ID
+  value: TEMPLATE_ENVIRONMENT
+- name: DT_CLUSTER_ID
+  value: #TEMPLATE_NAME#
+- name: JASYPT_PASSWORD
+  value: JENKINS_INJECTED_JASYPT_PASSWORD
+- name: DT_TENANT
+  value: 
+- name: DT_API_TOKEN
+  value: 
+
+

@@ -1,0 +1,50 @@
+
+replicaCount: 1
+
+env:
+- name: DT_ONEAGENT_PREFIX_DIR
+  value: /tmp
+- name: DT_ONEAGENT_FOR
+  value: all
+- name: DT_AGENT_BITNESS
+  value: "64"
+- name: TZ
+  value: Etc/UTC
+- name: ENVIRONMENT
+  value: sit3
+- name: SPRING_CONFIG_LOCATION
+  value: file:///etc/configmap/
+- name: DT_NODE_ID
+  value: sit3
+- name: DT_CLUSTER_ID
+  value: #TEMPLATE_NAME#
+- name: JASYPT_PASSWORD
+  value: JENKINS_INJECTED_JASYPT_PASSWORD
+- name: DT_TENANT
+  value: 
+- name: DT_API_TOKEN
+  value: 
+
+
+ingress:
+  enabled: true
+  annotations: {
+    kubernetes.io/ingress.class: alb,
+    alb.ingress.kubernetes.io/backend-protocol: HTTP,
+    alb.ingress.kubernetes.io/target-type: ip,
+    alb.ingress.kubernetes.io/scheme: internal,
+    alb.ingress.kubernetes.io/group.name: sit3-oth,
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]',
+    alb.ingress.kubernetes.io/healthcheck-path: /health,
+    alb.ingress.kubernetes.io/healthcheck-port: health,
+    alb.ingress.kubernetes.io/success-codes: '200',
+    alb.ingress.kubernetes.io/security-groups: 'eks-alb-sit3-sg',
+    alb.ingress.kubernetes.io/tags: "Environment=sit3,alb-group=sit3-oth"
+  }
+  hosts:
+    - host: overwritten.by.jenkins
+  tls: []
+
+inmCostAllocationApplication: Fargate
+inmCostAllocationProduct: IntegrationPlatform
+inmCostAllocationCostCentre: #COSTCENTRE#

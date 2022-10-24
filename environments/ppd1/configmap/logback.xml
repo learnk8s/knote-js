@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2018, Inmarsat Global Ltd.
+  ~ This file cannot be copied and/or distributed outside Inmarsat without the express permission given by
+  ~ Inmarsat Legal Affairs.  All permission requests should be requested via LegalCompliance@inmarsat.com.
+  -->
+
+<included>
+
+  <!-- override the default value; or comment out to leave it at default -->
+  <property name="root.level" value="INFO" />
+  <property name="performance.level" value="INFO" />
+  
+</included>
