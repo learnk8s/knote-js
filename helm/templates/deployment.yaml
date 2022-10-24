@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "#TEMPLATE_NAME#.fullname" . }}
+  name: {{ include "nodetest.fullname" . }}
   labels:
-    {{- include "#TEMPLATE_NAME#.labels" . | nindent 4 }}
+    {{- include "nodetest.labels" . | nindent 4 }}
 spec:
 {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
 {{- end }}
   selector:
     matchLabels:
-      {{- include "#TEMPLATE_NAME#.selectorLabels" . | nindent 6 }}
+      {{- include "nodetest.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       labels:
-        {{- include "#TEMPLATE_NAME#.selectorLabels" . | nindent 8 }}
+        {{- include "nodetest.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "#TEMPLATE_NAME#.serviceAccountName" . }}
+      serviceAccountName: {{ include "nodetest.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -55,18 +55,18 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
           - mountPath: /etc/configmap
-            name: #TEMPLATE_NAME#-config
+            name: nodetest-config
             readOnly: true
           - mountPath: /etc/secret
-            name: #TEMPLATE_NAME#-secret
+            name: nodetest-secret
             readOnly: true
       volumes:
-        - name: #TEMPLATE_NAME#-config
+        - name: nodetest-config
           configMap:
-            name: #TEMPLATE_NAME#
-        - name: #TEMPLATE_NAME#-secret
+            name: nodetest
+        - name: nodetest-secret
           secret:
-            secretName: #TEMPLATE_NAME#
+            secretName: nodetest
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "#TEMPLATE_NAME#.name" -}}
+{{- define "nodetest.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "#TEMPLATE_NAME#.fullname" -}}
+{{- define "nodetest.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "#TEMPLATE_NAME#.chart" -}}
+{{- define "nodetest.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "#TEMPLATE_NAME#.labels" -}}
-helm.sh/chart: {{ include "#TEMPLATE_NAME#.chart" . }}
-{{ include "#TEMPLATE_NAME#.selectorLabels" . }}
+{{- define "nodetest.labels" -}}
+helm.sh/chart: {{ include "nodetest.chart" . }}
+{{ include "nodetest.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -44,24 +44,24 @@ inm.CostAllocation.CostCentre: {{ .Values.inmCostAllocationCostCentre  | quote }
 inm.CostAllocation.Product: {{ .Values.inmCostAllocationProduct }}
 inm.CostAllocation.Application: {{ .Values.inmCostAllocationApplication }}
 management-zone: integration
-origin: #ORIGIN#
-uniqueid: '#UNIQUEID#'
+origin: abc123
+uniqueid: 'abc123'
 {{- end }}
 
 {{/*
 Selector labels
 */}}
-{{- define "#TEMPLATE_NAME#.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "#TEMPLATE_NAME#.name" . }}
+{{- define "nodetest.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "nodetest.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "#TEMPLATE_NAME#.serviceAccountName" -}}
+{{- define "nodetest.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "#TEMPLATE_NAME#.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "nodetest.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

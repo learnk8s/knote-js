@@ -1,18 +1,18 @@
-# Default values for #TEMPLATE_NAME#.
+# Default values for nodetest.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: 353215401403.dkr.ecr.eu-west-1.amazonaws.com/#TEMPLATE_NAME#
+  repository: 353215401403.dkr.ecr.eu-west-1.amazonaws.com/nodetest
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 
 imagePullSecrets: []
 nameOverride: ""
-fullnameOverride: "#TEMPLATE_NAME#"
+fullnameOverride: "nodetest"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -83,7 +83,7 @@ env:
 - name: DT_NODE_ID
   value: TEMPLATE_ENVIRONMENT
 - name: DT_CLUSTER_ID
-  value: #TEMPLATE_NAME#
+  value: nodetest
 - name: JASYPT_PASSWORD
   value: JENKINS_INJECTED_JASYPT_PASSWORD
 - name: DT_TENANT

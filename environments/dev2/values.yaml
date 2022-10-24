@@ -17,7 +17,7 @@ env:
 - name: DT_NODE_ID
   value: dev2
 - name: DT_CLUSTER_ID
-  value: #TEMPLATE_NAME#
+  value: nodetest
 - name: JASYPT_PASSWORD
   value: JENKINS_INJECTED_JASYPT_PASSWORD
 - name: DT_TENANT
@@ -47,4 +47,4 @@ ingress:
 
 inmCostAllocationApplication: Fargate
 inmCostAllocationProduct: IntegrationPlatform
-inmCostAllocationCostCentre: #COSTCENTRE#
+inmCostAllocationCostCentre: 1234
