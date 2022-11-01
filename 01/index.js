@@ -28,14 +28,15 @@ async function initMongo() {
 }
 
 async function start() {
-  const db = await initMongo()
+//   const db = await initMongo()
 
   app.set('view engine', 'pug')
   app.set('views', path.join(__dirname, 'views'))
   app.use(express.static(path.join(__dirname, 'public')))
 
   app.get('/', async (req, res) => {
-    res.render('index', { notes: await retrieveNotes(db) })
+    res.render('index', { notes: 'hello world' })
+//     res.render('index', { notes: await retrieveNotes(db) })
   })
 
   app.post(
