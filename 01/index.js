@@ -10,7 +10,7 @@ const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017/dev'
 
 async function initMongo() {
   console.log('Initialising MongoDB...')
-  let success = false
+  let success = true // edited to make it start even though there is no database
   while (!success) {
     try {
       client = await MongoClient.connect(mongoURL, {
