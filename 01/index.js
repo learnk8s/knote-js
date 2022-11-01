@@ -5,7 +5,7 @@ const multer = require('multer')
 const { marked } = require('marked')
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 8080
 const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017/dev'
 
 async function initMongo() {
