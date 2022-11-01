@@ -39,9 +39,6 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-            - name: health
-              containerPort: 8778
-              protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
