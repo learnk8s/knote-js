@@ -11,5 +11,9 @@ spec:
       targetPort: 8080
       protocol: TCP
       name: http
+#    - port: {{ .Values.service.healthPort }}
+#      targetPort: 8778
+#      protocol: TCP
+#      name: health
   selector:
     {{- include "nodetest.selectorLabels" . | nindent 4 }}

@@ -12,8 +12,6 @@ env:
   value: Etc/UTC
 - name: ENVIRONMENT
   value: sit2
-- name: SPRING_CONFIG_LOCATION
-  value: file:///etc/configmap/
 - name: DT_NODE_ID
   value: sit2
 - name: DT_CLUSTER_ID
@@ -35,9 +33,9 @@ ingress:
     alb.ingress.kubernetes.io/scheme: internal,
     alb.ingress.kubernetes.io/group.name: sit2-oth,
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]',
-    alb.ingress.kubernetes.io/healthcheck-path: /health,
-    alb.ingress.kubernetes.io/healthcheck-port: health,
-    alb.ingress.kubernetes.io/success-codes: '200',
+#    alb.ingress.kubernetes.io/healthcheck-path: /health,
+#    alb.ingress.kubernetes.io/healthcheck-port: health,
+#    alb.ingress.kubernetes.io/success-codes: '200',
     alb.ingress.kubernetes.io/security-groups: 'eks-alb-sit2-sg',
     alb.ingress.kubernetes.io/tags: "Environment=sit2,alb-group=sit2-oth"
   }

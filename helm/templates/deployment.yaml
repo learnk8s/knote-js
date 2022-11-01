@@ -39,6 +39,18 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+#            - name: health
+#              containerPort: 8778
+#              protocol: TCP
+#          livenessProbe:
+#            httpGet:
+#              path: /health
+#              port: health
+#            initialDelaySeconds: {{ .Values.health.initialDelaySeconds }}
+#            timeoutSeconds: {{ .Values.health.timeoutSeconds }}
+#            periodSeconds: {{ .Values.health.periodSeconds }}
+#            failureThreshold: {{ .Values.health.failureThreshold }}
+#            successThreshold: {{ .Values.health.successThreshold }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

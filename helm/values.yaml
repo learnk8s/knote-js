@@ -47,12 +47,12 @@ resources:
   #  cpu: 100m
   #  memory: 300Mi
 
-health:
-  initialDelaySeconds: 80
-  timeoutSeconds: 2
-  periodSeconds: 10
-  failureThreshold: 2
-  successThreshold: 1
+#health:
+#  initialDelaySeconds: 80
+#  timeoutSeconds: 2
+#  periodSeconds: 10
+#  failureThreshold: 2
+#  successThreshold: 1
 
 autoscaling:
   enabled: false
@@ -78,8 +78,6 @@ env:
   value: Etc/UTC
 - name: ENVIRONMENT
   value: TEMPLATE_ENVIRONMENT
-- name: SPRING_CONFIG_LOCATION
-  value: file:///etc/configmap/
 - name: DT_NODE_ID
   value: TEMPLATE_ENVIRONMENT
 - name: DT_CLUSTER_ID

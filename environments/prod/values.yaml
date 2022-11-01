@@ -23,8 +23,6 @@ env:
   value: Etc/UTC
 - name: ENVIRONMENT
   value: prod
-- name: SPRING_CONFIG_LOCATION
-  value: file:///etc/configmap/
 - name: DT_NODE_ID
   value: prod
 - name: DT_CLUSTER_ID
@@ -46,9 +44,9 @@ ingress:
     alb.ingress.kubernetes.io/scheme: internal,
     alb.ingress.kubernetes.io/group.name: prod-oth,
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]',
-    alb.ingress.kubernetes.io/healthcheck-path: /health,
-    alb.ingress.kubernetes.io/healthcheck-port: health,
-    alb.ingress.kubernetes.io/success-codes: '200',
+#    alb.ingress.kubernetes.io/healthcheck-path: /health,
+#    alb.ingress.kubernetes.io/healthcheck-port: health,
+#    alb.ingress.kubernetes.io/success-codes: '200',
     alb.ingress.kubernetes.io/security-groups: 'eks-alb-prod-sg',
     alb.ingress.kubernetes.io/tags: "Environment=prod,alb-group=prod-oth"
   }
