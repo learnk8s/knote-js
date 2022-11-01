@@ -35,9 +35,6 @@ ingress:
     alb.ingress.kubernetes.io/scheme: internal,
     alb.ingress.kubernetes.io/group.name: dev-oth,
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]',
-    alb.ingress.kubernetes.io/healthcheck-path: /health,
-    alb.ingress.kubernetes.io/healthcheck-port: health,
-    alb.ingress.kubernetes.io/success-codes: '200',
     alb.ingress.kubernetes.io/security-groups: 'eks-alb-dev-sg',
     alb.ingress.kubernetes.io/tags: "Environment=dev,alb-group=dev-oth"
   }
