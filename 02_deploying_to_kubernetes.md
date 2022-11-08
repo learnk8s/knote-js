@@ -632,7 +632,7 @@ spec:
     spec:
       containers:
         - name: mongo
-          image: mongo:3.6.17-xenial
+          image: mongo:6.0.2-focal
           ports:
             - containerPort: 27017
           volumeMounts:
