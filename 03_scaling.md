@@ -307,7 +307,7 @@ spec:
     spec:
       containers:
         - name: minio
-          image: minio/minio:RELEASE.2020-03-14T02-21-58Z
+          image: minio/minio:RELEASE.2022-10-29T06-21-33Z
           args:
             - server
             - /storage
