@@ -66,7 +66,7 @@ The application is made of two parts:
 1. A front-end written in Node.js and Express.
 1. A MongoDB to persist the data.
 
-All the code to build and deploy the app is available [in this repository](https://github.com/learnk8s/knote-js/tree/master/04).
+All the code to build and deploy the app is available [in this repository](https://github.com/learnk8s/knote-js/tree/master/03).
 
 **If you deployed the application already, you should delete the previous deployment and start fresh.**
 
